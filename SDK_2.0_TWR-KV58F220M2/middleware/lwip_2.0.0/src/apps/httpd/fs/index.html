@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<body onload="onload()">
+<img src="img/logo.gif" alt="undefined" height="63" width="270">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script>
+	  var xhr;
+           var idTimer1;
+	   function onload(){
+	   xhr = new (XMLHttpRequest);
+	   }
+           
+	   function Lamp_ON(){
+           xhr.open("GET", "Lamp_ON?c=1", true);
+	   xhr.responseType = "text";
+	   xhr.send(null);
+	   }	
+	  function Lamp_OFF(){
+	  xhr.open("GET", "Lamp_OFF?c=2", true);
+	  xhr.responseType = "text";
+	  xhr.send(null);
+	  }
+	  function Save_Power(){
+	    xhr.open("GET", "Save_Power?c=3", true);
+	    xhr.responseType = "text";
+	    xhr.send(null);
+	  }
+</script>
+
+
+
+  <title>Fon DRV</title>
+  <style>
+    lf {
+	font-family: Pompadur; /* Гарнитура шрифта */
+	src: url(fonts/pompadur.ttf); /* Путь к файлу со шрифтом */
+	font-family: Pompadur, 'Comic Sans MS', cursive;
+        text-align: center;
+	font-size: 16pt;
+    }
+    h2 {
+	font-size: 14pt;
+        text-align: center;
+    }
+   display: inline-block;
+  </style>
+</head>
+<body>
+<ul>
+  <lf> <h4>Драйвер лампы и фона HW2.0 </h4>
+	</lf>
+  <h2>  
+	<a href="settings.html" target="_self" rel="nofollow">Настройки &emsp; </a>
+	<a href="data_strim.html" target="_self" rel="nofollow">Текущие данные </a>
+  </h2>
+</ul>
+
+<form action='/' method='GET'>
+     <ul>
+	<h2>
+		<br>
+	
+			&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; <b>IP addres</b>
+			<input type="text" name="IP_addres"  size='15' value="192.168.000.122">&ensp; 
+	
+			&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; <b>Mask     </b>&ensp; &ensp;
+			<input type="text" name="MASK_addres" size='15' value="255.255.255.000">&ensp;
+	
+			&ensp;&ensp;&ensp;&ensp;&ensp;&ensp; <b>IP getway</b>
+			<input type="text" name="IP_getway"  size='15' value="192.168.000.001"><br><br>
+                         <input type='submit' value='OK'>	
+			
+	</h2>
+      </ul>
+</form>
+
+<div>
+ <h2> 
+	Ручная установка цвета фона 	
+	<input type="color" name="Color_fon" placeholder="Color_fon1"><br><br><br>
+        Установка яркости свечения <br><br>
+	<input type="text" name="power" size="5"placeholder="16000">
+        <button type="button" name="Save_power" formtarget="_self" onclick="Save_Power()" >Save Power </button>	
+
+	<br><br>
+        <button type="button" name="Lamp ON" formtarget="_self" onclick="Lamp_ON()" value="Lamp ON" > Lamp ON </button>&ensp;&ensp;
+	<button type="button" name="Lamp OFF" formtarget="_self" onclick="Lamp_OFF() "value="Lamp_OFF" > Lamp OFF </button>
+	<br><br>
+
+ </h2> 
+</div>
+
+
+
+
+
+

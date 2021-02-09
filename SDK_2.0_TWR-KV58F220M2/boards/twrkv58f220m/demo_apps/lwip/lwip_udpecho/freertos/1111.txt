@@ -1,0 +1,110 @@
+<p align="center"><font size="5"><i><b>Ссорт</b></i></font></p>
+<p align="center"><font size="4">Блок управления вибрационной подачей&nbsp;</font></p>
+<p align="center">Логин :&nbsp;<input maxlength="8" name="Login" size="8" type="text" value="********"><span style="text-align: center;">&nbsp; &nbsp; Пароль :&nbsp;<input maxlength="8" name="PAS" size="8" type="password" value="********"></span>&nbsp; &nbsp; &nbsp; &nbsp;<input name="Set_login" type="button" value="Вход "></p>
+<table align="center" border="1" cellpadding="1" cellspacing="1" style="width: 500px; height: 200px">
+	<caption><br>
+		<font size="5"><font size="4">Серийный номер платы SN=</font>&nbsp;<input maxlength="8" name="Serial" size="8" type="text" value="00000000"><br>
+		<font size="4">Весия ПО</font></font><b><font size="5">&nbsp;<input maxlength="6" name="Vers" size="6" type="text" value="000000"><br>
+		<br>
+		Параметры&nbsp;</font></b></caption>
+	<thead>
+		<tr>
+			<th scope="row">Канал &nbsp;</th>
+			<th scope="col">Связь датчика ОС</th>
+			<th scope="col">Связь электро магнит</th>
+			<th scope="col">Ток электромагнита, mA</th>
+			<th scope="col">Стабилизация амплитуды&nbsp;</th>
+			<th scope="col">Стабилизация виброскорости</th>
+			<th scope="col">Текущее значение Амплитуды, мкм</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">Канал №1</th>
+			<td style="text-align: center;"><br>
+				<input maxlength="9" name="Con_OS1" size="9" type="text" value="Отключено"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL1" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="4" name="Cur_EL1" size="4" type="text" value="0"></td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A1" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V1" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input maxlength="4" name="Can_Amp1" size="4" type="text" value="0"><br>
+				&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row">Канал №2</th>
+			<td style="text-align: center;"><input maxlength="9" name="Con_OS2" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL2" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="4" name="Cur_EL2" size="4" type="text" value="0"></td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A2" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V2" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input maxlength="4" name="Can_Amp2" size="4" type="text" value="0"><br>
+				&nbsp;</td>
+		</tr>
+		<tr>
+			<th scope="row">Канал №3</th>
+			<td style="text-align: center;"><input maxlength="9" name="Con_OS3" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL3" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><br>
+				<input maxlength="4" name="Cur_EL3" size="4" type="text" value="0"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A3" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V3" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><input maxlength="4" name="Can_Amp3" size="4" type="text" value="0"></td>
+		</tr>
+		<tr>
+			<th scope="row">Канал №4</th>
+			<td style="text-align: center;"><input maxlength="9" name="Con_OS4" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL4" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="4" name="Cur_EL4" size="4" type="text" value="0"></td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A4" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V4" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><input maxlength="4" name="Can_Amp4" size="4" type="text" value="0"></td>
+		</tr>
+		<tr>
+			<th scope="row">Канал №5</th>
+			<td style="text-align: center;"><input maxlength="9" name="Con_OS5" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL5" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="4" name="Cur_EL5" size="4" type="text" value="0"></td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A5" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V5" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><input maxlength="4" name="Can_Amp5" size="4" type="text" value="0"></td>
+		</tr>
+		<tr>
+			<th scope="row">Канал №6</th>
+			<td style="text-align: center;"><input maxlength="9" name="Con_OS6" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="9" name="Con_EL6" size="9" type="text" value="Отключено"></td>
+			<td style="text-align: center;"><input maxlength="4" name="Cur_EL6" size="4" type="text" value="0"></td>
+			<td style="text-align: center;"><br>
+				<input name="Set_A6" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><br>
+				<input name="Set_V6" type="checkbox"><br>
+				&nbsp;</td>
+			<td style="text-align: center;"><input maxlength="4" name="Can_Amp6" size="4" type="text" value="0"></td>
+		</tr>
+	</tbody>
+</table>
+<p>&nbsp;</p>

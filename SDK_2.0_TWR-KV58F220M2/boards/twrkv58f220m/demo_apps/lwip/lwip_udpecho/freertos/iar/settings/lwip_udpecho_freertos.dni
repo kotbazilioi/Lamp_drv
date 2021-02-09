@@ -1,0 +1,236 @@
+[Stack]
+FillEnabled=1
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[PlDriver]
+MemConfigValue=C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CONFIG\debugger\NXP\MKV58F1M0xxx24.ddf
+[Jet]
+DisableInterrupts=0
+LeaveRunning=0
+MultiCoreRunAll=0
+[ArmDriver]
+EnableCache=1
+[DebugChecksum]
+Checksum=1677886507
+[Exceptions]
+StopOnUncaught=_ 0
+StopOnThrow=_ 0
+[CodeCoverage]
+Enabled=_ 1
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[JLinkDriver]
+CStepIntDis=_ 0
+LeaveTargetRunning=_ 0
+TraceBufferSize=0x00010000
+TraceStallIfFIFOFull=0x00000000
+TracePortSize=0x00000000
+[SfrWindow]
+Show=1 1
+Sort=4 0
+[PE_STARTUP]
+CPUTARGETTYPENAME=_ "KINETIS"
+[PEMICRODriver]
+PEM_LeaveTargetRunning=0x00000000
+[Breakpoints]
+Count=0
+[SWOTraceHWSettings]
+OverrideDefaultClocks=0
+CpuClock=200000000
+ClockAutoDetect=0
+ClockWanted=30000000
+JtagSpeed=29357798
+Prescaler=7
+TimeStampPrescIndex=0
+TimeStampPrescData=0
+PcSampCYCTAP=1
+PcSampPOSTCNT=15
+PcSampIndex=0
+DataLogMode=0
+ITMportsEnable=0
+ITMportsTermIO=0
+ITMportsLogFile=0
+ITMlogFile=$PROJ_DIR$\ITM.log
+[struct_types]
+Fmt0=ENET_Type-MSCR	4	0
+Fmt1=SCommands_t-begin_b	4	0
+Fmt2=SCommands_t-crc	4	0
+Fmt3=crc_config_t-polynomial	4	0
+Fmt4=crc_config_t-seed	4	0
+Fmt5=heap_t-hsize	4	0
+Fmt6=heap_t-work_size	4	0
+Fmt7=ip4_addr_t-addr	4	0
+Fmt8=ip_addr_t-addr	4	0
+Fmt9=sim_uid_t-L	4	0
+Fmt10=sim_uid_t-MH	4	0
+Fmt11=sim_uid_t-ML	4	0
+Fmt12=uart_transfer_t-dataSize	3	0
+[array_types]
+Fmt0=int[16]	4	0
+Fmt1=int[32]	1	0
+Fmt2=int[4]	4	0
+Fmt3=int[8]	4	0
+Fmt4=uint32_t[16]	4	0
+Fmt5=uint32_t[1]	4	0
+Fmt6=uint32_t[2048]	4	0
+Fmt7=uint32_t[2]	4	0
+Fmt8=uint32_t[3]	4	0
+Fmt9=uint32_t[4]	4	0
+Fmt10=uint32_t[8]	4	0
+Fmt11=uint8_t[128]	4	0
+[watch_formats]
+Fmt0={W}1:MAC_ADR	4	0
+Fmt1={W}1:adress	4	0
+Fmt2={W}1:begin_b_store	3	0
+Fmt3={W}1:bssReg	4	0
+Fmt4={W}1:checksum16	4	0
+Fmt5={W}1:checksum32	4	0
+Fmt6={W}1:code_relocate	4	0
+Fmt7={W}1:crc_flash	4	0
+Fmt8={W}1:crc_flash[0]	4	0
+Fmt9={W}1:crc_flash[1]	4	0
+Fmt10={W}1:crc_symm[0]	4	0
+Fmt11={W}1:crc_symm[1]	4	0
+Fmt12={W}1:ct_byte	4	0
+Fmt13={W}1:data	4	0
+Fmt14={W}1:data[0]	4	0
+Fmt15={W}1:data[1]	4	0
+Fmt16={W}1:data[2]	4	0
+Fmt17={W}1:data[3]	4	0
+Fmt18={W}1:data_bufer	4	0
+Fmt19={W}1:destAdrss	4	0
+Fmt20={W}1:det32	4	0
+Fmt21={W}1:frame.begin_b	4	0
+Fmt22={W}1:frame.data[0]	4	0
+Fmt23={W}1:frame.data[1]	4	0
+Fmt24={W}1:frame.data[2]	4	0
+Fmt25={W}1:frame.data[3]	4	0
+Fmt26={W}1:frame.len	4	0
+Fmt27={W}1:in_crc	4	0
+Fmt28={W}1:index	4	0
+Fmt29={W}1:index_char	3	0
+Fmt30={W}1:interrupt	3	0
+Fmt31={W}1:kFTM_SystemClock	3	0
+Fmt32={W}1:kStatus_FLASH_Success	3	0
+Fmt33={W}1:l	4	0
+Fmt34={W}1:len	3	0
+Fmt35={W}1:len_fw1	4	0
+Fmt36={W}1:len_fw1[0]	4	0
+Fmt37={W}1:len_s	4	0
+Fmt38={W}1:len_temp	4	0
+Fmt39={W}1:mscr	1	0
+Fmt40={W}1:n	4	0
+Fmt41={W}1:pointer	4	0
+Fmt42={W}1:protectStatus	4	0
+Fmt43={W}1:result	3	0
+Fmt44={W}1:s	4	0
+Fmt45={W}1:sectorSize	4	0
+Fmt46={W}1:sector_buffer[2020]	4	0
+Fmt47={W}1:sector_buffer[2021]	4	0
+Fmt48={W}1:sector_buffer[2022]	4	0
+Fmt49={W}1:sector_buffer[2023]	4	0
+Fmt50={W}1:size_count	4	0
+Fmt51={W}1:start	4	0
+Fmt52={W}1:startAddress	4	0
+Fmt53={W}1:status_flag	1	0
+Fmt54={W}1:symm	4	0
+[Trace1]
+Enabled=0
+ShowSource=1
+[Trace2]
+Enabled=0
+ShowSource=0
+[SWOTraceWindow]
+PcSampling=0
+InterruptLogs=0
+ForcedTimeStamps=0
+EventCPI=0
+EventEXC=0
+EventFOLD=0
+EventLSU=0
+EventSLEEP=0
+[PowerLog]
+Title_0=I0
+Symbol_0=0 4 0
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+LiveEnabled=0
+LiveFile=PowerLogLive.log
+[DataLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+[EventLog]
+Title_0=Ch3
+Symbol_0=0 4 1
+Title_1=Ch2
+Symbol_1=0 4 1
+Title_2=Ch1
+Symbol_2=0 4 1
+Title_3=Ch0
+Symbol_3=0 4 1
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
+[InterruptLog]
+LogEnabled=0
+GraphEnabled=0
+ShowTimeLog=1
+SumEnabled=0
+ShowTimeSum=1
+SumSortOrder=0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.c}.266.10" 0 0 1 "" 0 "" 0
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.c}.217.11" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_DATA" "BOARD_InitPins" 0 0 0 0 4294967295
+Bp3=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\fsl_phy.c}.130.25" 0 0 1 "" 0 "" 0
+Bp4=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.262.13" 0 0 1 "" 0 "" 0
+Bp5=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.274.13" 0 0 1 "" 0 "" 0
+Bp6=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.255.13" 0 0 1 "" 0 "" 0
+Bp7=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.248.9" 0 0 1 "" 0 "" 0
+Bp8=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.240.2" 0 0 1 "" 0 "" 0
+Bp9=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\progFlash.C}.236.9" 0 0 1 "" 0 "" 0
+Bp10=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\..\devices\MKV58F24\drivers\fsl_dspi_edma.c}.133.9" 0 0 1 "" 0 "" 0
+Bp11=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\..\..\..\..\..\devices\MKV58F24\drivers\fsl_dspi_edma.c}.139.9" 0 0 1 "" 0 "" 0
+Bp12=_ 0 "EMUL_CODE" "0x81660110" 0 0 1 "" 0 "" 0
+Count=13
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Aliases]
+Count=0
+SuppressDialog=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
+Exclusions=
+[CallStackLog]
+Enabled=0
+[CallStackStripe]
+ShowTiming=1
+[PowerProbe]
+Frequency=10000
+Probe0=I0
+ProbeSetup0=2 1 1 2 0 0

@@ -1,0 +1,12 @@
+<p align="center">&nbsp;</p>
+<p>
+	<meta charset="utf-8"><font size="5">Обновление ПО</font></p>
+<p align="center">Текущая версия ПО &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<input maxlength="6" name="Ver_run" size="6" type="text" value="000000"></p>
+<p align="center">Сохраненная версия ПО&nbsp;<input maxlength="6" name="Ver_run" size="6" type="text" value="000000"></p>
+<p align="center">&nbsp;</p>
+<form enctype="multipart/form-data" method="post">
+	<p align="center">Возврат на сохраненную версию ПО&nbsp;<input name="Reload" type="button" value="Вернуть"></p>
+	<p align="center"><input name="f" type="file"> <input name="Prog" type="submit" value="Запрограммировать"></p>
+</form>
+<p>&nbsp;</p>
+<div>&nbsp;</div>

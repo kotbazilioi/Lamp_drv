@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<commands>
+	<command name="soft_update" id="1" data_length="1024" manual_request="false"/>
+	<command name="soft_update" id="1026" data_length="1024" manual_request="false"/>
+	<command name="soft_update" id="1027" data_length="1024" manual_request="false"/>
+	<command name="1025" id="1025" data_length="0" manual_request="true" interpretation="hex"/>
+        <command name="1028" id="1028" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="1024" id="1024" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="4096" id="4096" data_length="0" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4097" id="4097" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4098" id="4098" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4099" id="4099" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4100" id="4100" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4101" id="4101" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4102" id="4102" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4103" id="4103" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4104" id="4104" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4105" id="4105" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4106" id="4106" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4107" id="4107" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4108" id="4108" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="4109" id="4109" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4110" id="4110" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4111" id="4111" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4112" id="4112" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4113" id="4113" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4114" id="4114" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4115" id="4115" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4116" id="4116" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4117" id="4117" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4118" id="4118" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4119" id="4119" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4120" id="4120" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4121" id="4121" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4122" id="4122" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="4123" id="4123" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4124" id="4124" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4125" id="4125" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4126" id="4126" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4127" id="4127" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4128" id="4128" data_length="2" manual_request="true" interpretation="dec"/>
+	<command name="4129" id="4129" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4130" id="4130" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4131" id="4131" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4132" id="4132" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4133" id="4133" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4134" id="4134" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4135" id="4135" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4136" id="4136" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4137" id="4137" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4138" id="4138" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4139" id="4139" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4140" id="4140" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4141" id="4141" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4142" id="4142" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4143" id="4143" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4144" id="4144" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4145" id="4145" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4146" id="4146" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4147" id="4147" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4148" id="4148" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4149" id="4149" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4150" id="4150" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4151" id="4151" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4152" id="4152" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4153" id="4153" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4154" id="4154" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4155" id="4155" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4156" id="4156" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4157" id="4157" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4158" id="4158" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4159" id="4159" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4160" id="4160" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4161" id="4161" data_length="4" manual_request="true" interpretation="dec"/>
+	<command name="4162" id="4162" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4163" id="4163" data_length="0" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4164" id="4164" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4165" id="4165" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4166" id="4166" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4167" id="4167" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4168" id="4168" data_length="1" manual_request="true" interpretation="dec" write_to_file="true"/>
+	<command name="4169" id="4169" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4170" id="4170" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4171" id="4171" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4172" id="4172" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4173" id="4173" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4174" id="4174" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4175" id="4175" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4176" id="4176" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4177" id="4177" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4178" id="4178" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4179" id="4179" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4180" id="4180" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4181" id="4181" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4182" id="4182" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4183" id="4183" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4184" id="4184" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4185" id="4185" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4186" id="4186" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4187" id="4187" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4188" id="4188" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4189" id="4189" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4190" id="4190" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4191" id="4191" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4192" id="4192" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4193" id="4193" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="4194" id="4194" data_length="1" manual_request="true" interpretation="dec"/>
+	<command name="inj_set" id="8192" data_length="12" manual_request="true" interpretation="hex"/>
+	<command name="inj_clr" id="8193" data_length="12" manual_request="true" interpretation="hex"/>
+	<command name="get_id" id="0" data_length="0" manual_request="true" interpretation="hex" write_to_file="true"/>
+	<command name="set_protect" id="2" data_length="0" manual_request="true"/>
+	<command name="Erase " id="3" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="get_save_version" id="4" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="get_current_version" id="5" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="revert_version" id="6" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="restore app" id="6" data_length="0" manual_request="true"/>
+	<command name="run_app" id="7" data_length="0" manual_request="true"/>
+	<command name="Erase FW1" id="8" data_length="0" manual_request="true" />
+	<command name="Erase FW2" id="9" data_length="0" manual_request="true" />
+        <command name="set IP" id="10" data_length="4" manual_request="true" interpretation="hex"/>
+	<command name="get_loader_version" id="11" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="reset" id="12" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="unset_protect" id="13" data_length="0" manual_request="true"/>
+	<command name="set CAN ADDR TX" id="14" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="set CAN ADDR RX" id="15" data_length="2" manual_request="true" interpretation="hex"/>
+	<command name="go_to_loader" id="4096" data_length="1" manual_request="true"/>
+	<command name="set_vibro_speed_1" id="4097" data_length="1" manual_request="true"/>
+	<command name="8192" id="8192" data_length="12" manual_request="true" interpretation="hex"/>
+</commands>

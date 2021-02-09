@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<commands>
+	<command name="get_id" id="0" data_length="0" manual_request="true" interpretation="hex" write_to_file="true"/>
+	<command name="soft_update" id="1" data_length="1024" manual_request="false"/>
+	<command name="set_protect" id="2" data_length="0" manual_request="true"/>
+	<command name="Erase " id="3" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="get_save_version" id="4" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="get_current_version" id="5" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="revert_version" id="6" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="restore app" id="6" data_length="0" manual_request="true"/>
+	<command name="run_app" id="7" data_length="0" manual_request="true"/>
+	<command name="Erase FW1" id="8" data_length="0" manual_request="true" />
+	<command name="Erase FW2" id="9" data_length="0" manual_request="true" />
+	<command name="get_loader_version" id="11" data_length="0" manual_request="true" interpretation="hex"/>
+	<command name="reset" id="12" data_length="0" manual_request="true" interpretation="dec"/>
+	<command name="unset_protect" id="13" data_length="0" manual_request="true"/>
+	<command name="Enable Fail Transfer" id="1100" data_length="0" manual_request="true"/>
+	<command name="Disable Fail Transfer" id="1101" data_length="0" manual_request="true"/>
+</commands>

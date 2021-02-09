@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<userOverrides>
+    <override>
+        <path>D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\html_page.c</path>
+        <encoding>UTF-8</encoding>
+    </override>
+    <override>
+        <path>D:\viber\Boot_loader_ethernet\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\frame_decod.c</path>
+        <encoding>Win-1251</encoding>
+    </override>
+    <override>
+        <path>D:\viber\Boot_loader_ethernet\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\progFlash.C</path>
+        <encoding>Win-1251</encoding>
+    </override>
+    <override>
+        <path>D:\viber\Boot_loader_ethernet\SDK_2.0_TWR-KV58F220M2\middleware\lwip_2.0.0\contrib\apps\udpecho\udpecho.c</path>
+        <encoding>Win-1251</encoding>
+    </override>
+</userOverrides>
