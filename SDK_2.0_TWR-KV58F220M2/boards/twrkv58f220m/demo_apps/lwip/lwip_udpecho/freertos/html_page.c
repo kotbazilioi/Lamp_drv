@@ -5,6 +5,18 @@
 //#include "flash_if.h"
 uint8_t ct_logoff_time;
 uint8_t flag_logon=0;
+
+
+unsigned char key_http[30]="asfasdvas";
+int key_http_len = 10;
+char HTTP401[]={0x48,0x54,0x54,0x50,0x2f,0x31,0x2e,0x31,0x20,0x34,0x30,0x31,0x20,0x55,0x6e,0x61,   //HTTP/1.1 401 Una
+0x75,0x74,0x68,0x6f,0x72,0x69,0x7a,0x65,0x64,0x0d,0x0a,0x57,0x57,0x57,0x2d,0x41,   //uthorized..WWW-A
+0x75,0x74,0x68,0x65,0x6e,0x74,0x69,0x63,0x61,0x74,0x65,0x3a,0x20,0x42,0x61,0x73,   //uthenticate: Bas
+0x69,0x63,0x20,0x72,0x65,0x61,0x6c,0x6d,0x3d,0x22}; 
+
+char HTTP401end[]={0x22,0x0d,0x0a,0x0d,0x0a};
+
+
 static const char http_html_hdr[] = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n";
   //char * data[]="<a href=\"settings.html\" target=\"_self\" rel=\"nofollow\">????????? &emsp; </a>";/*<body onload=\"onload()\"\>*/
 static const char http_html_start_constr[] = "\<!DOCTYPE html>\r\n <body onload=\"onload()\">\n\r<a href=\"http:\/\/www.csort.ru/\"></a>\n\r<img src=\"img/logo.gif\" height=\"63\" width=\"270\" border=\"0\" alt=\"csort logo\" title=\"404 error\">\n\r <html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n\r<script\>"
@@ -249,6 +261,20 @@ sprintf(str1,"<button type=\"submit\" name=\"%s\" formtarget=\"_self\" value=\"%
 
 return 0;
 }
+
+
+
+uint32_t costr_pass(char* str1)
+{
+uint32_t len_out;
+memset (str1,0, 5000);
+memcpy(str1,(char*)(HTTP401),sizeof(HTTP401));
+strcat(str1,"Name_dev");
+strcat(str1,(char*)HTTP401end);
+len_out=strlen(str1);        
+return len_out;
+}
+
 
 
 uint32_t costr_page1(char* str1)

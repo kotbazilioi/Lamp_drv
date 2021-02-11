@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.general.xcl" --backend -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.general.xcl" --backend -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.general.xcl" --debug_file=$debugfile --backend -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.general.xcl" --debug_file=$debugfile --backend -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Release.driver.xcl" 
 }

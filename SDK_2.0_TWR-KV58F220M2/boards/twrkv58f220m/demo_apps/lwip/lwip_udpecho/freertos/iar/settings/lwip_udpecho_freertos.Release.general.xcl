@@ -2,7 +2,7 @@
 
 "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\bin\armjlink2.dll" 
 
-"D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\release\lwip_udpecho_freertos.out" 
+"D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\release\lwip_udpecho_freertos.out" 
 
 --plugin="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\bin\armbat.dll" 
 

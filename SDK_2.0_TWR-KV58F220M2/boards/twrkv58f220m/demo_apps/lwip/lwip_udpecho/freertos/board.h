@@ -162,7 +162,7 @@ void BOARD_InitDebugConsole(void);
 #define configIP_ADDR0 192
 #define configIP_ADDR1 168
 #define configIP_ADDR2 0
-#define configIP_ADDR3 102
+#define configIP_ADDR3 101
 
 /* Netmask configuration. */
 #define configNET_MASK0 255

@@ -1,6 +1,6 @@
 fonts.pbi: \
-  D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\ssd1306\fonts.c \
-  D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\ssd1306/fonts.h \
+  D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\ssd1306\fonts.c \
+  D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\ssd1306/fonts.h \
   C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.4\arm\inc\c\stdint.h \
   C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.4\arm\inc\c\ycheck.h \
   C:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.4\arm\inc\c\yvals.h \

@@ -1,48 +1,15 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
  <head>
   <meta charset="utf-8">
-  <title>Таблица размеров обуви</title>
+  <title>Поле с паролем</title>
  </head>
  <body>
-  <table border="1">
-   <caption>Таблица размеров обуви</caption>
-   <tr>
-    <th>Россия</th>
-    <th>Великобритания</th>
-    <th>Европа</th>
-    <th>Длина ступни, см</th>
-   </tr>
-   <tr><td>34,5</td><td>3,5</td><td>36</td><td><input type="text" name="nickname" maxlength="50" size="20"></td></tr>
-   <tr><td>35,5</td><td>4</td><td>36⅔</td><td><input type="checkbox" name="a" value="1417">выбор</td></tr>
-   <tr><td>36</td><td>4,5</td><td>37⅓</td><td><input type="radio" checked name="raz"/>  </td></tr>
-   <tr><td>36,5</td><td>5</td><td>38</td><td><input type="radio" name="raz1"/></td></tr>
-   <tr><td>37</td><td>5,5</td><td>38⅔</td><td><input type="radio" name="raz1"/></td></tr>
-   <tr><td>38</td><td>6</td><td>39⅓</td><td><input type="radio" checked name="raz"/></td></tr>
-   <tr><td>48</td><td>13,5</td><td>49⅓</td><td>31,5</td></tr>
-  </table>
-
-<table border="1" style="width: 80%;  height: 146px;margin: auto;">
-<tbody>
-<tr style="height: 20px;">
-<td style="width: 60%; text-align: center; height: 20px;">Параметр&nbsp;</td>
-<td style="width: 14.2937%; text-align: center; height: 20px;">Значение&nbsp;</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 60%; text-align: left; height: 20px;"></td>
-<td style="width: 14.2937%; text-align: center; height: 20px;">ячиваи</td>
-</tr>
-<tr style="height: 20px;">
-<td style="width: 60%; text-align: left; height: 20px;"></td>
-<td style="width: 14.2937%; text-align: center; height: 20px;"></td>
-</tr>
-
-</tbody>
-</table>
-<!-- ######## This is a comment, visible only in the source editor  ######## -->
-<h1 style="color: #4485b8;"></h1>
-<p></p>
-
-
+  <form action="handler.php">
+   <p><strong>Логин:</strong> 
+    <input maxlength="25" size="40" name="login"></p>
+   <p><strong>Пароль:</strong> 
+    <input type="password" maxlength="25" size="40" name="password"></p>
+  </form>
  </body>
 </html>

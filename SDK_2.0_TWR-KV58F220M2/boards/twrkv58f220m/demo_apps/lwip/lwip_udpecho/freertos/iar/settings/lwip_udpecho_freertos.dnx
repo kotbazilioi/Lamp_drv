@@ -18,7 +18,7 @@
         <jlinkResetStrategy>2</jlinkResetStrategy>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>3124972743</Checksum>
+        <Checksum>264720042</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -63,6 +63,7 @@
         <Fmt0>{W}1:ct_mass	4	0</Fmt0>
         <Fmt1>{W}1:power	4	0</Fmt1>
         <Fmt2>{W}1:recv_err	3	0</Fmt2>
+        <Fmt3>{W}1:start_key	4	0</Fmt3>
     </watch_formats>
     <Trace2>
         <Enabled>0</Enabled>
@@ -130,7 +131,7 @@
         <Bp5>_ 0 "EMUL_DATA" "reload_io" 0 0 0 0 4294967295</Bp5>
         <Bp6>_ 0 "EMUL_DATA" "http_server_netconn_thread" 0 0 0 0 4294967295</Bp6>
         <Bp7>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\middleware\lwip_2.0.0\contrib\apps\httpserver\httpserver-netconn.c}.0.1" 0 0 1 "" 0 "" 0</Bp7>
-        <Bp8>_ 1 "EMUL_CODE" "{D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\middleware\lwip_2.0.0\contrib\apps\httpserver\httpserver-netconn.c}.191.9" 0 0 1 "" 0 "" 0</Bp8>
+        <Bp8>_ 0 "EMUL_DATA" "NETCONN_NOCOPY" 0 0 0 0 4294967295</Bp8>
         <Count>9</Count>
     </Breakpoints2>
     <TermIOLog>

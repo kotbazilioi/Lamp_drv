@@ -20,6 +20,7 @@ rule browsedata
 
 
 #Build steps
+build base64.pbi : index base64.xcl
 build board.pbi : index board.xcl
 build clock_config.pbi : index clock_config.xcl
 build fonts.pbi : index fonts.xcl
@@ -149,18 +150,18 @@ build frame_decod.pbi : index frame_decod.xcl
 build lwip_udpecho_freertos.pbi : index lwip_udpecho_freertos.xcl
 build system_MKV58F24.pbi : index system_MKV58F24.xcl
 build fsl_debug_console.pbi : index fsl_debug_console.xcl
-build lwip_udpecho_freertos_part0.pbi : link board.pbi clock_config.pbi fonts.pbi fsl_phy.pbi hard_init.pbi html_page.pbi pflash.pbi pin_mux.pbi ssd1306.pbi ssd1306_i2c.pbi fsl_adc16.pbi
-build lwip_udpecho_freertos_part1.pbi : link fsl_clock.pbi fsl_cmp.pbi fsl_common.pbi fsl_crc.pbi fsl_dma_manager.pbi fsl_dmamux.pbi fsl_dspi.pbi fsl_dspi_edma.pbi fsl_edma.pbi fsl_enet.pbi fsl_flexcan.pbi
-build lwip_udpecho_freertos_part2.pbi : link fsl_flexcan_edma.pbi fsl_ftfx_cache.pbi fsl_ftfx_controller.pbi fsl_ftfx_flash.pbi fsl_ftfx_flexnvm.pbi fsl_ftm.pbi fsl_gpio.pbi fsl_hsadc.pbi fsl_i2c.pbi fsl_i2c_edma.pbi fsl_pwm.pbi
-build lwip_udpecho_freertos_part3.pbi : link fsl_sim.pbi fsl_smc.pbi fsl_uart.pbi fsl_uart_edma.pbi fsl_xbara.pbi fsl_xbarb.pbi port.pbi croutine.pbi event_groups.pbi heap_3.pbi list.pbi
-build lwip_udpecho_freertos_part4.pbi : link queue.pbi tasks.pbi timers.pbi ethernetif.pbi sys_arch.pbi api_lib.pbi api_msg.pbi err.pbi httpd.pbi httpserver-netconn.pbi netbuf.pbi
-build lwip_udpecho_freertos_part5.pbi : link netdb.pbi netifapi.pbi sockets.pbi tcpip.pbi autoip.pbi dhcp.pbi icmp.pbi igmp.pbi ip4.pbi ip4_addr.pbi ip_frag.pbi
-build lwip_udpecho_freertos_part6.pbi : link dhcp6.pbi ethip6.pbi icmp6.pbi inet6.pbi ip6.pbi ip6_addr.pbi ip6_frag.pbi mld6.pbi nd6.pbi def.pbi dns.pbi
-build lwip_udpecho_freertos_part7.pbi : link fs.pbi inet_chksum.pbi init.pbi ip.pbi lwip_timers.pbi mem.pbi memp.pbi netif.pbi pbuf.pbi raw.pbi stats.pbi
-build lwip_udpecho_freertos_part8.pbi : link sys.pbi tcp.pbi tcp_in.pbi tcp_out.pbi udp.pbi auth.pbi ccp.pbi chap-md5.pbi chap-new.pbi chap_ms.pbi demand.pbi
-build lwip_udpecho_freertos_part9.pbi : link eap.pbi eui64.pbi fsm.pbi ipcp.pbi ipv6cp.pbi lcp.pbi lwip_ecp.pbi magic.pbi mppe.pbi multilink.pbi ppp.pbi
-build lwip_udpecho_freertos_part10.pbi : link pppapi.pbi pppcrypt.pbi pppoe.pbi pppol2tp.pbi pppos.pbi upap.pbi utils.pbi vj.pbi etharp.pbi ethernet.pbi lowpan6.pbi
-build lwip_udpecho_freertos_part11.pbi : link slipif.pbi tcpecho.pbi udpecho.pbi app.pbi frame_decod.pbi lwip_udpecho_freertos.pbi system_MKV58F24.pbi fsl_debug_console.pbi
+build lwip_udpecho_freertos_part0.pbi : link base64.pbi board.pbi clock_config.pbi fonts.pbi fsl_phy.pbi hard_init.pbi html_page.pbi pflash.pbi pin_mux.pbi ssd1306.pbi ssd1306_i2c.pbi
+build lwip_udpecho_freertos_part1.pbi : link fsl_adc16.pbi fsl_clock.pbi fsl_cmp.pbi fsl_common.pbi fsl_crc.pbi fsl_dma_manager.pbi fsl_dmamux.pbi fsl_dspi.pbi fsl_dspi_edma.pbi fsl_edma.pbi fsl_enet.pbi
+build lwip_udpecho_freertos_part2.pbi : link fsl_flexcan.pbi fsl_flexcan_edma.pbi fsl_ftfx_cache.pbi fsl_ftfx_controller.pbi fsl_ftfx_flash.pbi fsl_ftfx_flexnvm.pbi fsl_ftm.pbi fsl_gpio.pbi fsl_hsadc.pbi fsl_i2c.pbi fsl_i2c_edma.pbi
+build lwip_udpecho_freertos_part3.pbi : link fsl_pwm.pbi fsl_sim.pbi fsl_smc.pbi fsl_uart.pbi fsl_uart_edma.pbi fsl_xbara.pbi fsl_xbarb.pbi port.pbi croutine.pbi event_groups.pbi heap_3.pbi
+build lwip_udpecho_freertos_part4.pbi : link list.pbi queue.pbi tasks.pbi timers.pbi ethernetif.pbi sys_arch.pbi api_lib.pbi api_msg.pbi err.pbi httpd.pbi httpserver-netconn.pbi
+build lwip_udpecho_freertos_part5.pbi : link netbuf.pbi netdb.pbi netifapi.pbi sockets.pbi tcpip.pbi autoip.pbi dhcp.pbi icmp.pbi igmp.pbi ip4.pbi ip4_addr.pbi
+build lwip_udpecho_freertos_part6.pbi : link ip_frag.pbi dhcp6.pbi ethip6.pbi icmp6.pbi inet6.pbi ip6.pbi ip6_addr.pbi ip6_frag.pbi mld6.pbi nd6.pbi def.pbi
+build lwip_udpecho_freertos_part7.pbi : link dns.pbi fs.pbi inet_chksum.pbi init.pbi ip.pbi lwip_timers.pbi mem.pbi memp.pbi netif.pbi pbuf.pbi raw.pbi
+build lwip_udpecho_freertos_part8.pbi : link stats.pbi sys.pbi tcp.pbi tcp_in.pbi tcp_out.pbi udp.pbi auth.pbi ccp.pbi chap-md5.pbi chap-new.pbi chap_ms.pbi
+build lwip_udpecho_freertos_part9.pbi : link demand.pbi eap.pbi eui64.pbi fsm.pbi ipcp.pbi ipv6cp.pbi lcp.pbi lwip_ecp.pbi magic.pbi mppe.pbi multilink.pbi
+build lwip_udpecho_freertos_part10.pbi : link ppp.pbi pppapi.pbi pppcrypt.pbi pppoe.pbi pppol2tp.pbi pppos.pbi upap.pbi utils.pbi vj.pbi etharp.pbi ethernet.pbi
+build lwip_udpecho_freertos_part11.pbi : link lowpan6.pbi slipif.pbi tcpecho.pbi udpecho.pbi app.pbi frame_decod.pbi lwip_udpecho_freertos.pbi system_MKV58F24.pbi fsl_debug_console.pbi
 build lwip_udpecho_freertos.pbd : link lwip_udpecho_freertos_part0.pbi lwip_udpecho_freertos_part1.pbi lwip_udpecho_freertos_part2.pbi lwip_udpecho_freertos_part3.pbi lwip_udpecho_freertos_part4.pbi lwip_udpecho_freertos_part5.pbi lwip_udpecho_freertos_part6.pbi lwip_udpecho_freertos_part7.pbi lwip_udpecho_freertos_part8.pbi lwip_udpecho_freertos_part9.pbi lwip_udpecho_freertos_part10.pbi lwip_udpecho_freertos_part11.pbi
 build lwip_udpecho_freertos.pbw : browsedata lwip_udpecho_freertos.pbd
 

@@ -11,6 +11,7 @@
 #include "httpserver-netconn.h"
 #include "html_page.h"
 #include "heap_3.h"
+#include "base64.h"
 #if LWIP_NETCONN
 
 #ifndef HTTPD_DEBUG
@@ -122,32 +123,68 @@ memset(elem_post_data.name,0,32);
 
 
 
+
 static void http_server_netconn_serve(struct netconn *conn) 
 {
   //post_data_t post_data[32];
-  
+  char buf_list[5000]={0};
+
   struct netbuf *inbuf;
   err_t recv_err;
   char* buf;
   u16_t buflen;
   struct fs_file file;
-  char buf_list[5000]={0};
+  
   uint16_t len_buf_list;
-
+  uint16_t ct_fpass=0;
+  uint16_t start_key=0;
   
   /* Read the data from the port, blocking if nothing yet there. 
    We assume the request (the part we care about) is in one netbuf */
-  recv_err = netconn_recv(conn, &inbuf);
-  
+ recv_err = netconn_recv(conn, &inbuf);
   if (recv_err == ERR_OK)
   {
     if (netconn_err(conn) == ERR_OK) 
     {
       netbuf_data(inbuf, (void**)&buf, &buflen);
-    
-      /* Is this an HTTP GET command? (only check the first 5 chars, since
-      there are other formats for GET, and we're keeping it very simple )*/
       
+  //    memset((void*)&buf_list[0],0,20);
+      
+      memset((void*)key_http,0,30);
+      
+      for (ct_fpass=0;ct_fpass<1024;ct_fpass++)
+        {
+          if (strncmp((char*)&buf[ct_fpass],"Basic",5) == 0)
+            {
+              start_key=ct_fpass+6;
+              break;
+            }
+        }
+      memcpy((char*)buf_list,(char*)&buf[start_key],16);  
+      unbase64((char*)buf_list,16,&key_http_len,key_http);
+
+  
+   
+      if ((flag_logon==0)&&(strncmp(key_http,"admin:admin",key_http_len) != 0))
+          {          
+            len_buf_list=costr_pass((char*)buf_list);
+            netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+            flag_logon=0;
+            // memcpy(key_http,"admin:admin",12); 
+          }
+      
+       if ((flag_logon==0)&&(strncmp(key_http,"admin:admin",key_http_len) == 0))
+            {
+              flag_logon=1;
+//              if (strncmp((char*)&buf[0x57],"Authorization:",14)==0)
+//                {
+//                  memcpy(key_http,(char*)&buf[0x6c],20);                  
+//                }            
+            }
+            
+      
+    if(strncmp(key_http,"admin:admin",key_http_len) == 0)  
+     {
       if ((buflen >=5) && (strncmp(buf, "GET /", 5) == 0))
       {
         /* Check if request to get ST.gif */ 
@@ -176,7 +213,9 @@ static void http_server_netconn_serve(struct netconn *conn)
          page_index=0;
           len_buf_list=costr_page1((char*)buf_list);
           netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-          fs_close(&file);
+                
+        
+       //  fs_close(&file);
         }
         else 
         {
@@ -194,11 +233,17 @@ static void http_server_netconn_serve(struct netconn *conn)
           
           parser_post(buf,buflen,page_index);
         }
-      }      
+      }  
+    
+    
     }
-    
-    
+    else
+      {
+         flag_logon=0;     
+      }
       
+  }
+  
   }
   /* Close the connection (server closes in HTTP) */
   netconn_close(conn);
@@ -247,7 +292,7 @@ http_server_netconn_thread(void *arg)
 /** Initialize the HTTP server (start its thread) */
 void http_server_netconn_init(void)
 {
-  sys_thread_new("http_server_netconn", http_server_netconn_thread, NULL,8*1024, tskIDLE_PRIORITY+1);
+  sys_thread_new("http_server_netconn", http_server_netconn_thread, NULL,6*1024, tskIDLE_PRIORITY+2);
 }
 
 #endif /* LWIP_NETCONN*/

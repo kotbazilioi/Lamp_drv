@@ -90,8 +90,8 @@
 #define configCPU_CLOCK_HZ (100000000UL) //Указывается рабочая частота контроллера  
 #define configTICK_RATE_HZ ((TickType_t)5000) //Указывается длительность системного тика 
 #define configMAX_PRIORITIES (18) //Указывается максимальное число приоритетов для задач
-#define configMINIMAL_STACK_SIZE ((unsigned short)90) //Минимальный размер стека (idle hook)  
-#define configTOTAL_HEAP_SIZE ((size_t)(16 * 1024))// */ /* not used by heap_3 allocator *///Общий объем памяти (кучи), только для heap_1, heap_2 
+#define configMINIMAL_STACK_SIZE ((unsigned short)256) //Минимальный размер стека (idle hook)  
+#define configTOTAL_HEAP_SIZE ((size_t)(24 * 1024))// */ /* not used by heap_3 allocator *///Общий объем памяти (кучи), только для heap_1, heap_2 
 #define configMAX_TASK_NAME_LEN (10) //Максимальная длинна имени задачи
 #define configUSE_TRACE_FACILITY 1 //Трассировка с записью в буфер (1-включена, 0-отключена)
 #define configUSE_16_BIT_TICKS 0 //Выбор типа 16-битного счетчика (1-16 бит, 0-32 бит)  

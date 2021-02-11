@@ -2842,6 +2842,9 @@
     <group>
         <name>board</name>
         <file>
+            <name>$PROJ_DIR$\base64.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\board.c</name>
         </file>
         <file>
