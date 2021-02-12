@@ -2,14 +2,22 @@
 <html>
  <head>
   <meta charset="utf-8">
-  <title>Поле с паролем</title>
+  <title>Поле для чтения</title>
  </head>
- <body>
-  <form action="handler.php">
-   <p><strong>Логин:</strong> 
-    <input maxlength="25" size="40" name="login"></p>
-   <p><strong>Пароль:</strong> 
-    <input type="password" maxlength="25" size="40" name="password"></p>
-  </form>
+ <body> 
+<style>
+   textarea {
+    width: 90%; /* Ширина поля в процентах */
+    height: 200px; /* Высота поля в пикселах */
+    resize: none; /* Запрещаем изменять размер */
+   } 
+  </style>
+ <center>
+ <form action="handler.php">
+  <p>Скопируйте приведённый текст и вставьте его в 
+  поле запроса пароля.</p>
+
+  <p><textarea name="comment" align="center" readonly rows="10" cols="2" align="center" disabled >Мухахаnb</textarea></p>  </center> 
+ </form>
  </body>
 </html>

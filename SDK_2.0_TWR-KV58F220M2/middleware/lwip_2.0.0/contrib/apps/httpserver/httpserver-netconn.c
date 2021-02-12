@@ -4,7 +4,7 @@
 #include "lwip/api.h"
 #include "stdio.h"
 #include "stdlib.h"
-//#include "html.h"
+#include "hard_init.h"
 #include "httpd_structs.h"
 #include "fs.h"
 #include "DLib_Config_Full.h"
@@ -12,6 +12,7 @@
 #include "html_page.h"
 #include "heap_3.h"
 #include "base64.h"
+#include "app.h"
 #if LWIP_NETCONN
 
 #ifndef HTTPD_DEBUG
@@ -23,50 +24,6 @@ uint8_t page_index;
 
 
 
-//////static void
-//////http_server_netconn_serve(struct netconn *conn)
-//////{
-//////  struct netbuf *inbuf;
-//////  char *buf;
-//////  u16_t buflen;
-//////  err_t err;
-//////  
-//////  /* Read the data from the port, blocking if nothing yet there. 
-//////   We assume the request (the part we care about) is in one netbuf */
-//////  err = netconn_recv(conn, &inbuf);
-//////  
-//////  if (err == ERR_OK) {
-//////    netbuf_data(inbuf, (void**)&buf, &buflen);
-//////    
-//////    /* Is this an HTTP GET command? (only check the first 5 chars, since
-//////    there are other formats for GET, and we're keeping it very simple )*/
-//////    if (buflen>=5 &&
-//////        buf[0]=='G' &&
-//////        buf[1]=='E' &&
-//////        buf[2]=='T' &&
-//////        buf[3]==' ' &&
-//////        buf[4]=='/' ) {
-//////       /* Send the HTML header 
-//////             * subtract 1 from the size, since we dont send the \0 in the string
-//////             * NETCONN_NOCOPY: our data is const static, so no need to copy it
-//////       */
-//////      netconn_write(conn, http_html_hdr, sizeof(http_html_hdr)-1, NETCONN_NOCOPY);
-//////      
-//////      /* Send our HTML page */
-//////      netconn_write(conn, html_2, sizeof(html_2)-1, NETCONN_NOCOPY);
-//////      
-//////      /* Send our HTML page */
-//////   //   netconn_write(conn, http_index_html, sizeof(http_index_html)-1, NETCONN_NOCOPY);
-//////    }
-//////    
-//////  }
-//////  /* Close the connection (server closes in HTTP) */
-//////  netconn_close(conn);
-//////  
-//////  /* Delete the buffer (netconn_recv gives us ownership,
-//////   so we have to make sure to deallocate the buffer) */
-//////  netbuf_delete(inbuf);
-//////}
 
 typedef struct post_data_t
   {
@@ -75,50 +32,391 @@ typedef struct post_data_t
     //uint8_t len_par;
   }post_data_t;
 
+ uint8_t scanf_ip (char* data,uint8_t* ip_mass,uint8_t len_ip)
+  {
+     signed int  ct_char=0;
+     uint16_t mul_k=1;
+     memset(ip_mass,0,4);
+    for(ct_char=len_ip-1;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[3]=(data[ct_char]-0x30)*mul_k+ip_mass[3];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            {// break;
+              return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    ct_char--;
+    mul_k=1;
+    for(;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[2]=(data[ct_char]-0x30)*mul_k+ip_mass[2];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            { 
+              //break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    ct_char--;
+     mul_k=1;
+     for(;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[1]=(data[ct_char]-0x30)*mul_k+ip_mass[1];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            { //break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+     ct_char--;
+      mul_k=1;
+     for(;ct_char>=0;ct_char--)
+      {
+        if ((data[ct_char]!='.')||(ct_char!=0))
+          {
+            ip_mass[0]=(data[ct_char]-0x30)*mul_k+ip_mass[0];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            {// break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    return 0;
+  }
+  
+  
+   uint8_t scanf_port (char* data,uint16_t* ip_mass,uint8_t len_ip)
+  {
+     signed int  ct_char=0;
+     uint16_t mul_k=1;
 
+      mul_k=1;
+      *ip_mass=0;
+     for(ct_char=len_ip;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]>0x39)
+          {
+            return 1;
+          }
+        if (ct_char!=0)
+          {
+            *ip_mass=(data[ct_char-1]-0x30)*mul_k+(*ip_mass);
+            mul_k=mul_k*10;  
+            if (mul_k>10000)
+            {// break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    return 0;
+  }
+  void param_run(post_data_t* post_data,uint8_t index)
+{
+  uint8_t IP_buf[4];
+  uint16_t port_n;
+        uint8_t ct_temp0;
+  uint8_t len_mess=0;
+  if (index==3)
+  {
+    if (strncmp((char*)post_data->name,"name_dev", sizeof("name_dev")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_Name_dev,0,strlen((char*)FW_data.V_Name_dev));
+            for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+             
+              }
+            memcpy((char*)FW_data.V_Name_dev, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"geo_place", sizeof("geo_place")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+              memset((char*)FW_data.V_GEOM_NAME,0,strlen((char*)FW_data.V_GEOM_NAME));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_GEOM_NAME, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"call_data", sizeof("call_data")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+              memset((char*)FW_data.V_CALL_DATA,0,strlen((char*)FW_data.V_CALL_DATA));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_CALL_DATA, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"ip_addr", sizeof("ip_addr")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_CONFIG, (char*)IP_buf,4 );
+            }
+          
+          }
+    else if (strncmp((char*)post_data->name,"mask_addr", sizeof("mask_addr")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_MASK, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"getway_addr", sizeof("getway_addr")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_GET, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"dns_addr", sizeof("dns_addr")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_DNS, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"port_http", sizeof("port_http")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              FW_data.V_WEB_PORT=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"login", sizeof("login")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+             memset((char*)FW_data.V_LOGIN,0,strlen((char*)FW_data.V_LOGIN));
+            memcpy((char*)FW_data.V_LOGIN, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"password", sizeof("password")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_PASSWORD,0,strlen((char*)FW_data.V_PASSWORD));
+            memcpy((char*)FW_data.V_PASSWORD, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"snmp_addr", sizeof("snmp_addr")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_SNMP, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"port_snmp", sizeof("port_snmp")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              FW_data.V_PORT_SNMP=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"ntp1_addr", sizeof("ntp1_addr")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_NTP1, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"ntp2_addr", sizeof("ntp2_addr")) == 0)
+          {
+           len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_NTP2, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"time_circl", sizeof("time_circl")) == 0)
+          {
+           len_mess=strlen(post_data->data);
+        //
+           
+           if (post_data->data[0]=='-')
+           {
+            post_data->data[0]=post_data->data[1];
+            post_data->data[1]=post_data->data[2];
+            len_mess--;
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              
+              FW_data.V_NTP_CIRCL=(signed char)port_n-2*port_n;
+            }
+           }
+           else
+           {
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              
+              FW_data.V_NTP_CIRCL=(signed char)port_n;
+            }
+           
+           }
+           
+          }
+    else if (strncmp((char*)post_data->name,"time_set", sizeof("time_set")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+          //  memcpy((char*)FW_data.V_PASSWORD, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"mess_on", sizeof("mess_on")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+                memset((char*)FW_data.V_ON_MESS,0,strlen((char*)FW_data.V_ON_MESS));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_ON_MESS, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"mess_off", sizeof("mess_off")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_OFF_MESS,0,strlen((char*)FW_data.V_OFF_MESS));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_OFF_MESS, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"output_type", sizeof("output_type")) == 0)
+          {
+           len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              FW_data.V_TYPE_OUT=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"save_all", sizeof("save_all")) == 0)
+          {
+            if (post_data->data[0]==0x31)
+              {
+                flag_global_save_data=1;
+              }
+          }
+    else if (strncmp((char*)post_data->name,"load_def", sizeof("load_def")) == 0)
+          {
+           if (post_data->data[0]==0x31)
+              {
+                flag_global_load_def=1;
+              }
+          }
+    else if (strncmp((char*)post_data->name,"load_boot", sizeof("load_boot")) == 0)
+          {
+           ///jamp_to_boot();
+          }
+    else
+     
+    {
+    
+    }
+    
+  }
+  
+}
 void parser_post(char* buf_in,uint16_t buf_in_len,uint8_t index)
 {
 uint16_t ct_index,start_pars;
 uint16_t start_par;
 post_data_t elem_post_data;
 
-memset(elem_post_data.data,0,32);
-memset(elem_post_data.name,0,32);
-
-  for(ct_index=buf_in_len;ct_index>0;ct_index--)
-    {
-      if (buf_in[ct_index]==0x0a)
-        {
-          if ((buf_in[ct_index-2]==0x0a)&&(buf_in[ct_index-1]==0x0d)&&(buf_in[ct_index-3]==0x0d))
-            {
-              start_pars=ct_index+1;
-              ct_index=1;
-            }
-        }
-    }
-  start_par=start_pars;
-  for(ct_index=start_pars;ct_index<=buf_in_len;ct_index++)
-    {
-      //elem_post_data=&post_mess[index_sec];
-      if (buf_in[ct_index]=='=')
-        {
-          
-        //  memset(elem_post_data->name,0,32);
-          memcpy(elem_post_data.name,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
-          start_par=ct_index+1;
-        }
-      if ((buf_in[ct_index]=='&')||(ct_index==buf_in_len))
-        {
-         // memset(elem_post_data->data,0,32);
-          memcpy(elem_post_data.data,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
-          start_par=ct_index+1;
-          
-//          elem_post_data->len_par=index_sec+1;
-//          index_sec++;
-          
-        }
-    }
-  
+ for(ct_index=buf_in_len;ct_index>0;ct_index--)
+   {
+     if (buf_in[ct_index]==0x0a)
+       {
+         if ((buf_in[ct_index-2]==0x0a)&&(buf_in[ct_index-1]==0x0d)&&(buf_in[ct_index-3]==0x0d))
+           {
+             start_pars=ct_index+1;
+             ct_index=1;
+           }
+       }
+   }
+ start_par=start_pars;
+ for(ct_index=start_pars;ct_index<=buf_in_len;ct_index++)
+   {
+    // elem_post_data=&post_mess[index_sec];
+     if (buf_in[ct_index]=='=')
+       {
+         
+         memset(elem_post_data.name,0,32);
+         memcpy(elem_post_data.name,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
+         start_par=ct_index+1;
+       }
+     if ((buf_in[ct_index]=='&')||(ct_index==buf_in_len))
+       {
+         memset(elem_post_data.data,0,32);
+         memcpy(elem_post_data.data,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
+         start_par=ct_index+1;
+         param_run(&elem_post_data,index);
+         //case_data_in
+      //   elem_post_data.len_par=index_sec+1;
+       // index_sec++;
+         
+       }
+   }
+ 
 }
 
 
@@ -165,7 +463,7 @@ static void http_server_netconn_serve(struct netconn *conn)
 
   
    
-      if ((flag_logon==0)&&(strncmp(key_http,"admin:admin",key_http_len) != 0))
+      if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) != 0))
           {          
             len_buf_list=costr_pass((char*)buf_list);
             netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
@@ -173,7 +471,7 @@ static void http_server_netconn_serve(struct netconn *conn)
             // memcpy(key_http,"admin:admin",12); 
           }
       
-       if ((flag_logon==0)&&(strncmp(key_http,"admin:admin",key_http_len) == 0))
+       if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) == 0))
             {
               flag_logon=1;
 //              if (strncmp((char*)&buf[0x57],"Authorization:",14)==0)
@@ -183,7 +481,7 @@ static void http_server_netconn_serve(struct netconn *conn)
             }
             
       
-    if(strncmp(key_http,"admin:admin",key_http_len) == 0)  
+    if(strncmp(key_http,"admin:csort",key_http_len) == 0)  
      {
       if ((buflen >=5) && (strncmp(buf, "GET /", 5) == 0))
       {
@@ -192,20 +490,20 @@ static void http_server_netconn_serve(struct netconn *conn)
         {
           recv_err=fs_open(&file, "/img/logo.gif");           
           netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
-          fs_close(&file);
+       //   fs_close(&file);
         }          
       else if (strncmp((char const *)buf,"GET /settings.html",17)==0)
             {
               page_index=1;
               len_buf_list=costr_settings((char*)buf_list);
               netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-              fs_close(&file);
+          //    fs_close(&file);
             }
       else if (strncmp((char const *)buf,"GET /data_strim.html",17)==0)
             {
               page_index=2;
-              fs_open(&file, "/data_strim.html");
-              netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+              len_buf_list=costr_logs((char*)buf_list);
+              netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
               fs_close(&file);
             }
       else if((strncmp(buf, "GET /index.html", 15) == 0)||(strncmp(buf, "GET / HTTP/1.1", 14) == 0))
@@ -213,9 +511,7 @@ static void http_server_netconn_serve(struct netconn *conn)
          page_index=0;
           len_buf_list=costr_page1((char*)buf_list);
           netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-                
-        
-       //  fs_close(&file);
+
         }
         else 
         {
@@ -232,6 +528,7 @@ static void http_server_netconn_serve(struct netconn *conn)
       
           
           parser_post(buf,buflen,page_index);
+          
         }
       }  
     

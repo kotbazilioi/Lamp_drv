@@ -43,6 +43,8 @@ extern uint8_t SPI1_masterTxData[64*all_modul];
 extern uint8_t cos_4[16];
 extern uint8_t cos_2[16];
 extern uint8_t tringl[31];
+extern uint8_t flag_global_save_data;
+extern uint8_t flag_global_load_def;
 
 void  set_adress_drv( uint8_t modul,uint8_t device_sel,uint8_t addr);
 void  set_data_drv( uint8_t modul,uint8_t mode,uint8_t addr,uint8_t* data);

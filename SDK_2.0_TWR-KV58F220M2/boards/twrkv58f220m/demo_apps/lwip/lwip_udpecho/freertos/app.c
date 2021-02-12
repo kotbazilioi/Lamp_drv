@@ -23,7 +23,8 @@
 #include "pin_mux.h"
 #include "fsl_gpio.h"
 #include "app.h"
-
+uint8_t flag_global_save_data=0;
+uint8_t flag_global_load_def=0;
 uint8_t SPI0_masterRxData[all_modul+1] = {0U};
 uint8_t SPI0_masterTxData[all_modul+1] = {0U};
 

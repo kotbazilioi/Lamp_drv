@@ -18,7 +18,7 @@
         <jlinkResetStrategy>2</jlinkResetStrategy>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>264720042</Checksum>
+        <Checksum>1084507412</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>

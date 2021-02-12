@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 
-
+uint32_t costr_logs(char* str1);
 uint32_t costr_pass(char* str1);
 uint32_t costr_page1(char* str1);
 extern uint8_t flag_logon;

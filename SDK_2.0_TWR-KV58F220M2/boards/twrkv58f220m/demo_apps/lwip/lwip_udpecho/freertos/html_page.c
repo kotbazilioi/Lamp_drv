@@ -44,6 +44,17 @@ static const char http_html_start_constr[] = "\<!DOCTYPE html>\r\n <body onload=
 	  "}\n\r"
 "</script>";
 
+static const char http_logs_hdr[]="<style> textarea { width: 90%;height:200px;resize:none;}</style><center><form action>";
+//
+//<p>Скопируйте приведённый текст и вставьте его в 
+//  поле запроса пароля.</p>
+
+static const char http_logs_area[]="<p><textarea name=\"comment\" align=\"center\" readonly rows=\"10\" cols=\"2\" align=\"center\" disabled >";
+static const char http_logs_end[] ="</textarea></p>  </center>"; 
+    
+    
+    
+    
 
 static const char http_html_start_constr1[] = "<!DOCTYPE html>"
 "<body onload=\"onload()\">"
@@ -349,7 +360,7 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2);
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_IP_config[0],Hi_DCDC.V_IP_config[1],Hi_DCDC.V_IP_config[2],Hi_DCDC.V_IP_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_CONFIG[0],FW_data.V_IP_CONFIG[1],FW_data.V_IP_CONFIG[2],FW_data.V_IP_CONFIG[3]);
   strcat(str1,str2);
   
   
@@ -363,7 +374,7 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2);
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_MASK_config[0],Hi_DCDC.V_MASK_config[1],Hi_DCDC.V_MASK_config[2],Hi_DCDC.V_MASK_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_MASK[0],FW_data.V_IP_MASK[1],FW_data.V_IP_MASK[2],FW_data.V_IP_MASK[3]);
   strcat(str1,str2);
 
   
@@ -378,7 +389,7 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2); 
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_GET_config[0],Hi_DCDC.V_GET_config[1],Hi_DCDC.V_GET_config[2],Hi_DCDC.V_GET_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_GET[0],FW_data.V_IP_GET[1],FW_data.V_IP_GET[2],FW_data.V_IP_GET[3]);
   strcat(str1,str2);
   
   set_space(str2,6);
@@ -391,7 +402,7 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2); 
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",Hi_DCDC.V_MAC_config[0],Hi_DCDC.V_MAC_config[1],Hi_DCDC.V_MAC_config[2],Hi_DCDC.V_MAC_config[3],Hi_DCDC.V_MAC_config[4],Hi_DCDC.V_MAC_config[5]);
+  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",FW_data.V_ID_MAC[0],FW_data.V_ID_MAC[1],FW_data.V_ID_MAC[2],FW_data.V_ID_MAC[3],FW_data.V_ID_MAC[4],FW_data.V_ID_MAC[5]);
   strcat(str1,str2);
   
   
@@ -512,6 +523,8 @@ uint32_t costr_page1(char* str1)
 ////    lamp_state_t lamp_state;
 
 
+
+
 uint32_t costr_settings(char* str1)
 {
   uint32_t len;
@@ -580,6 +593,22 @@ uint32_t costr_settings(char* str1)
  set_space(str2,6);
   strcat(str1,str2);  
 
+  
+////  
+////  set_open_block(str2,"b> Имя устройства </b");
+////  strcat(str1,str2);
+////  
+////  set_space(str2,2);
+////  strcat(str1,str2);
+////  
+////  memset(str2,0,256);
+////  sprintf(str2,"<b>%s</b>",FW_data.V_Name_dev);
+////  strcat(str1,str2);
+////
+////  set_space(str2,6);
+////  strcat(str1,str2);
+  
+
   set_open_block(str2,"b>IP addres</b");
   strcat(str1,str2);
   
@@ -587,20 +616,25 @@ uint32_t costr_settings(char* str1)
   strcat(str1,str2);
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_IP_config[0],Hi_DCDC.V_IP_config[1],Hi_DCDC.V_IP_config[2],Hi_DCDC.V_IP_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_CONFIG[0],FW_data.V_IP_CONFIG[1],FW_data.V_IP_CONFIG[2],FW_data.V_IP_CONFIG[3]);
   strcat(str1,str2);
 
   set_space(str2,6);
   strcat(str1,str2);  
 
+  
+  
+  
    set_open_block(str2,"b>Mask addres</b");
   strcat(str1,str2);
+  
+  
   
   set_space(str2,2);
   strcat(str1,str2);
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_MASK_config[0],Hi_DCDC.V_MASK_config[1],Hi_DCDC.V_MASK_config[2],Hi_DCDC.V_MASK_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_MASK[0],FW_data.V_IP_MASK[1],FW_data.V_IP_MASK[2],FW_data.V_IP_MASK[3]);
   strcat(str1,str2);
 
   
@@ -615,7 +649,7 @@ uint32_t costr_settings(char* str1)
   strcat(str1,str2); 
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%d.%d.%d.%d</b>",Hi_DCDC.V_GET_config[0],Hi_DCDC.V_GET_config[1],Hi_DCDC.V_GET_config[2],Hi_DCDC.V_GET_config[3]);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_GET[0],FW_data.V_IP_GET[1],FW_data.V_IP_GET[2],FW_data.V_IP_GET[3]);
   strcat(str1,str2);
   
   set_space(str2,6);
@@ -628,7 +662,7 @@ uint32_t costr_settings(char* str1)
   strcat(str1,str2); 
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",Hi_DCDC.V_MAC_config[0],Hi_DCDC.V_MAC_config[1],Hi_DCDC.V_MAC_config[2],Hi_DCDC.V_MAC_config[3],Hi_DCDC.V_MAC_config[4],Hi_DCDC.V_MAC_config[5]);
+  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",FW_data.V_ID_MAC[0],FW_data.V_ID_MAC[1],FW_data.V_ID_MAC[2],FW_data.V_ID_MAC[3],FW_data.V_ID_MAC[4],FW_data.V_ID_MAC[5]);
   strcat(str1,str2);
   
   
@@ -668,24 +702,30 @@ uint32_t costr_settings(char* str1)
   set_open_block(str2,"table border=\"1\" style=\"width: 80%; margin: auto;\"><tbody");
   strcat(str1,str2);
   
+  
+  memset(str2,0,256);
+  sprintf(str4,"%s",FW_data.V_Name_dev);
+  set_intext(str3,"Name_dev","15",str4);
+  set_2row_str (str2,"Имя устройства  ",str3,10,60,20);
+  strcat(str1,str2);
 
   
   memset(str2,0,256);
-  sprintf(str4,"%d.%d.%d.%d",Hi_DCDC.V_IP_config[0],Hi_DCDC.V_IP_config[1],Hi_DCDC.V_IP_config[2],Hi_DCDC.V_IP_config[3]);
+  sprintf(str4,"%d.%d.%d.%d",FW_data.V_IP_CONFIG[0],FW_data.V_IP_CONFIG[1],FW_data.V_IP_CONFIG[2],FW_data.V_IP_CONFIG[3]);
   set_intext(str3,"IP_addr","15",str4);
   set_2row_str (str2,"IP адрес ",str3,10,60,20);
   strcat(str1,str2);
   
   
     memset(str2,0,256);
-  sprintf(str4,"%d.%d.%d.%d",Hi_DCDC.V_MASK_config[0],Hi_DCDC.V_MASK_config[1],Hi_DCDC.V_MASK_config[2],Hi_DCDC.V_MASK_config[3]);
+  sprintf(str4,"%d.%d.%d.%d",FW_data.V_IP_MASK[0],FW_data.V_IP_MASK[1],FW_data.V_IP_MASK[2],FW_data.V_IP_MASK[3]);
   set_intext(str3,"Mask_net","15",str4);
   set_2row_str (str2,"Маска сети",str3,10,60,20);
   strcat(str1,str2);
   
   
     memset(str2,0,256);
-  sprintf(str4,"%d.%d.%d.%d",Hi_DCDC.V_GET_config[0],Hi_DCDC.V_GET_config[1],Hi_DCDC.V_GET_config[2],Hi_DCDC.V_GET_config[3]);
+  sprintf(str4,"%d.%d.%d.%d",FW_data.V_IP_GET[0],FW_data.V_IP_GET[1],FW_data.V_IP_GET[2],FW_data.V_IP_GET[3]);
   set_intext(str3,"IP_Getway","15",str4);
   set_2row_str (str2,"Адрес шлюза",str3,10,60,20);
   strcat(str1,str2);
@@ -788,6 +828,214 @@ uint32_t costr_settings(char* str1)
   strcat(str1,str2);
   
   
+
+    
+  reset_open_block(str2,"form");
+  strcat(str1,str2); 
+  
+  
+  
+  
+  len=strlen(str1);
+  
+  
+  
+  return len;
+};
+
+
+uint32_t costr_logs(char* str1)
+{
+  uint32_t len;
+  char str2[256];
+  char str3[256];
+  char str4[256];
+  memset (str1,0, 4000);
+
+  //len = sizeof(http_html_start_constr);
+  strcat(str1,http_html_start_constr1);
+  
+  //len = len+sizeof(http_html_style);
+  strcat(str1,http_html_style);
+  
+  set_open_block(str2,"body");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"ul");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"lf");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"h4");
+  strcat(str1,str2);
+  
+  sizeof("Драйвер лампы и фона HW2.0 ");
+  strcat(str1,"Драйвер лампы и фона HW2.0 ");
+  
+  reset_open_block(str2,"h4");
+  strcat(str1,str2);
+  
+  reset_open_block(str2,"lf");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"h2");
+  strcat(str1,str2);
+  
+  
+  set_link(str2,"Главная ","index.html");
+  strcat(str1,str2);
+  
+  set_link(str2,"Настройки","settings.html");
+  strcat(str1,str2);  
+    
+  reset_open_block(str2,"h2");
+  strcat(str1,str2);
+
+  reset_open_block(str2,"ul");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"form action='/' method='GET'");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"ul");
+  strcat(str1,str2);
+  
+  
+  set_open_block(str2,"h3");
+  strcat(str1,str2);
+  
+  set_open_block(str2,"br");
+  strcat(str1,str2);
+  
+  
+ set_space(str2,6);
+  strcat(str1,str2);  
+
+  
+////  
+////  set_open_block(str2,"b> Имя устройства </b");
+////  strcat(str1,str2);
+////  
+////  set_space(str2,2);
+////  strcat(str1,str2);
+////  
+////  memset(str2,0,256);
+////  sprintf(str2,"<b>%s</b>",FW_data.V_Name_dev);
+////  strcat(str1,str2);
+////
+////  set_space(str2,6);
+////  strcat(str1,str2);
+  
+
+  set_open_block(str2,"b>IP addres</b");
+  strcat(str1,str2);
+  
+  set_space(str2,2);
+  strcat(str1,str2);
+  
+  memset(str2,0,256);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_CONFIG[0],FW_data.V_IP_CONFIG[1],FW_data.V_IP_CONFIG[2],FW_data.V_IP_CONFIG[3]);
+  strcat(str1,str2);
+
+  set_space(str2,6);
+  strcat(str1,str2);  
+
+  
+  
+  
+   set_open_block(str2,"b>Mask addres</b");
+  strcat(str1,str2);
+  
+  
+  
+  set_space(str2,2);
+  strcat(str1,str2);
+  
+  memset(str2,0,256);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_MASK[0],FW_data.V_IP_MASK[1],FW_data.V_IP_MASK[2],FW_data.V_IP_MASK[3]);
+  strcat(str1,str2);
+
+  
+    
+  set_space(str2,6);
+  strcat(str1,str2);  
+  
+  set_open_block(str2,"b>IP getway</b");
+  strcat(str1,str2);
+  
+  set_space(str2,2);
+  strcat(str1,str2); 
+  
+  memset(str2,0,256);
+  sprintf(str2,"<b>%d.%d.%d.%d</b>",FW_data.V_IP_GET[0],FW_data.V_IP_GET[1],FW_data.V_IP_GET[2],FW_data.V_IP_GET[3]);
+  strcat(str1,str2);
+  
+  set_space(str2,6);
+  strcat(str1,str2);  
+  
+  set_open_block(str2,"b>MAC adress</b");
+  strcat(str1,str2);
+  
+  set_space(str2,2);
+  strcat(str1,str2); 
+  
+  memset(str2,0,256);
+  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",FW_data.V_ID_MAC[0],FW_data.V_ID_MAC[1],FW_data.V_ID_MAC[2],FW_data.V_ID_MAC[3],FW_data.V_ID_MAC[4],FW_data.V_ID_MAC[5]);
+  strcat(str1,str2);
+  
+  
+//  len=len+set_intext(str2,"IP_getway","15","192.168.000.001");
+//  strcat(str1,str2);  
+  
+  reset_open_block(str2,"h3");
+  strcat(str1,str2);
+  
+  reset_open_block(str2,"ul");
+  strcat(str1,str2);
+  
+  reset_open_block(str2,"form");
+  strcat(str1,str2);
+  
+  
+
+  
+  set_open_block(str2,"form action='/' method='POST'");
+  strcat(str1,str2);
+  
+ 
+  set_open_block(str2,"h2");
+  strcat(str1,str2);
+  
+  set_br(str2,2);  
+  strcat(str1,str2);
+  
+////  static const char http_logs_hdr[]="<style> textarea { width: 90%;height:200px;resize:none;}</style><center><form action>";
+//////
+  strcat(str1,http_logs_hdr);
+  
+  
+  set_open_block(str2,"p>Скопируйте приведённый текст и вставьте его в поле запроса пароля.</p");
+  strcat(str1,str2);
+   
+
+  strcat(str1,http_logs_area);
+    
+  sprintf(str2,"Скопируйте приведённый текст и вставьте его в поле запроса пароля");
+  strcat(str1,str2);
+  
+  
+  strcat(str1,http_logs_end);
+
+////
+////static const char http_logs_area[]="<p><textarea name=\"comment\" align=\"center\" readonly rows=\"10\" cols=\"2\" align=\"center\" disabled >";
+////static const char http_logs_end[] ="</textarea></p>  </center>"; 
+  
+  
+  reset_open_block(str2,"h2");
+  strcat(str1,str2);
+  
+
 
     
   reset_open_block(str2,"form");

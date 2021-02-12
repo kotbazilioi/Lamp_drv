@@ -230,7 +230,7 @@
 
     DCDC_data_t Hi_DCDC;
     lamp_state_t lamp_state;
-
+    FW_data_t FW_data;
     
           
   // __root uint16_t data_hsadc0_buf[8][256]@0x2001A540;
@@ -1851,20 +1851,20 @@ void data_load_config (ip4_addr_t* netif0_ipaddr,ip4_addr_t* netif0_netmask,ip4_
     
     }  
     
-    Hi_DCDC.V_IP_config[0]=crc_flash[0];
-    Hi_DCDC.V_IP_config[1]=crc_flash[0]>>8;
-    Hi_DCDC.V_IP_config[2]=crc_flash[0]>>16;
-    Hi_DCDC.V_IP_config[3]=crc_flash[0]>>24;
+    FW_data.V_IP_CONFIG[0]=crc_flash[0];
+    FW_data.V_IP_CONFIG[1]=crc_flash[0]>>8;
+    FW_data.V_IP_CONFIG[2]=crc_flash[0]>>16;
+    FW_data.V_IP_CONFIG[3]=crc_flash[0]>>24;
     
-    Hi_DCDC.V_MASK_config[0]=(uint32_t)crc_flash[3];
-    Hi_DCDC.V_MASK_config[1]=(uint32_t)crc_flash[3]>>8;
-    Hi_DCDC.V_MASK_config[2]=(uint32_t)crc_flash[3]>>16;
-    Hi_DCDC.V_MASK_config[3]=(uint32_t)crc_flash[3]>>24;
+    FW_data.V_IP_MASK[0]=(uint32_t)crc_flash[3];
+    FW_data.V_IP_MASK[1]=(uint32_t)crc_flash[3]>>8;
+    FW_data.V_IP_MASK[2]=(uint32_t)crc_flash[3]>>16;
+    FW_data.V_IP_MASK[3]=(uint32_t)crc_flash[3]>>24;
     
-    Hi_DCDC.V_GET_config[0]=(uint32_t)crc_flash[4];
-    Hi_DCDC.V_GET_config[1]=(uint32_t)crc_flash[4]>>8;
-    Hi_DCDC.V_GET_config[2]=(uint32_t)crc_flash[4]>>16;
-    Hi_DCDC.V_GET_config[3]=(uint32_t)crc_flash[4]>>24;
+    FW_data.V_IP_GET[0]=(uint32_t)crc_flash[4];
+    FW_data.V_IP_GET[1]=(uint32_t)crc_flash[4]>>8;
+    FW_data.V_IP_GET[2]=(uint32_t)crc_flash[4]>>16;
+    FW_data.V_IP_GET[3]=(uint32_t)crc_flash[4]>>24;
 }
 /*
  * @brief Main function
@@ -2252,7 +2252,7 @@ void hard_config (void)
         for (int i = 0; i <= 7; i++)
           {
             Serial[i] = *(p + i);
-            Hi_DCDC.V_MAC_config[i]=*(p + i);
+            FW_data.V_ID_MAC[i]=*(p + i);
           }
 
    // Enet var
