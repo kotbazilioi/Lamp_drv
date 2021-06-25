@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<settings>
-    <device port="2048" ip="192.168.0.102"/>
-    <delays request_period="1000" packet_delay="300" error_delay="1000"/>
-    <counters max_resend="10" max_timeout_request="6"/>
-    <view command_widgets="26"/>
-    <progs prog_path="E:/ika/development/works/Soft_git/lamp_app/SDK_2.0_TWR-KV58F220M2/boards/twrkv58f220m/demo_apps/lwip/lwip_udpecho/freertos/iar/release/lwip_udpecho_freertos.bin"/>
-</settings>

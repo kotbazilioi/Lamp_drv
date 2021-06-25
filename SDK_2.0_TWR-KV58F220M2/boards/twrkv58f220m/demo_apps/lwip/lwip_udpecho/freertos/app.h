@@ -14,7 +14,7 @@
 #define max_dot_curr_g 0x7f
 #define max_dot_curr_b 0x7f
 #define max_dot_curr_irf 0x5f
-#define speed_grade 1
+#define speed_grade 25
 #define max_power_dac 0x8000
 #define power_lamp_100 max_power_dac 
 #define power_lamp_80 max_power_dac -max_power_dac/10
@@ -26,11 +26,10 @@
 #define power_lamp_0 0
 #define dy 250
 #define dp 50
-
+#define lamp_sys 0
 
 #define STATE_ON 1
 #define STATE_OFF 0
-//#define lamp_sys
 extern uint8_t SPI0_masterRxData[all_modul+1];
 extern uint8_t SPI0_masterTxData[all_modul+1];
 extern uint8_t SPI1_masterRxData[64*all_modul];
@@ -51,12 +50,12 @@ void  set_data_drv( uint8_t modul,uint8_t mode,uint8_t addr,uint8_t* data);
 void  set_xlat_mode_drv( void);
 void  set_xlat_drv( void );
 void load_dot_correct(uint8_t* data_mass_white,uint8_t* data_mass_green,uint8_t* data_mass_blue,uint8_t* data_mass_ir);
-void remap_canal_lamp_r (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData );
-void remap_canal_lamp_g (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData);  
-void remap_canal_lamp_b (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData);
-void remap_canal_lamp_irf (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData);
-void remap_canal_lamp_white (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData);
-void remap_canal_lamp_ir (uint8_t* data_mass,uint8_t modul,uint8_t addr,uint8_t* TxData);
+void remap_canal_lamp_r (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData );
+void remap_canal_lamp_g (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData);  
+void remap_canal_lamp_b (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData);
+void remap_canal_lamp_irf (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData);
+ void remap_canal_lamp_white (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData);
+void remap_canal_lamp_ir (uint8_t* data_mass,uint16_t modul,uint8_t addr,uint8_t* TxData);
 void DAC_slow_swich (uint16_t power);     
 void Set_lamp_power (uint16_t power);
 void RSet_lamp_power(void);

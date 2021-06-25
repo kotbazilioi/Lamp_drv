@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.general.xcl" --backend -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.general.xcl" --backend -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\Projects\MainLDrv20\lamp_app\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\boards\twrkv58f220m\demo_apps\lwip\lwip_udpecho\freertos\iar\settings\lwip_udpecho_freertos.Debug.driver.xcl" 
 
 @echo off 
 :end

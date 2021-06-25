@@ -161,7 +161,7 @@ void BOARD_InitDebugConsole(void);
 /* IP address configuration. */
 #define configIP_ADDR0 192
 #define configIP_ADDR1 168
-#define configIP_ADDR2 0
+#define configIP_ADDR2 88
 #define configIP_ADDR3 101
 
 /* Netmask configuration. */
@@ -173,7 +173,7 @@ void BOARD_InitDebugConsole(void);
 /* Gateway address configuration. */
 #define configGW_ADDR0 192
 #define configGW_ADDR1 168
-#define configGW_ADDR2 0
+#define configGW_ADDR2 88
 #define configGW_ADDR3 100
 
 

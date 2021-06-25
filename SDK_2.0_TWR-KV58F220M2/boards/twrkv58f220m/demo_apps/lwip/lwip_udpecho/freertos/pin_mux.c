@@ -190,7 +190,7 @@ void BOARD_InitPins(void)
 
     gpio_pin_config_t DRV_OFF_config = {
         .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
+        .outputLogic = 1U
     };
     /* Initialize GPIO functionality on pin PTD6 (pin 99)  */
     GPIO_PinInit(BOARD_INITPINS_DRV_OFF_GPIO, BOARD_INITPINS_DRV_OFF_PIN, &DRV_OFF_config);
@@ -551,7 +551,7 @@ gpio_pin_config_t OUT_CMP3_config = {
 
                      /* Open Drain Enable: Open drain output is enabled on the corresponding pin, if the pin is
                       * configured as a digital output. */
-                     | PORT_PCR_ODE(kPORT_OpenDrainEnable));
+                     | PORT_PCR_ODE(kPORT_OpenDrainDisable));
 
    /* PORTE0 (pin 1) is configured as PTE0 */
     PORT_SetPinMux(BOARD_INITPINS_BUS_kontaktor_PORT, BOARD_INITPINS_BUS_kontaktor_PIN, kPORT_MuxAsGpio);

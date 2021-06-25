@@ -1409,6 +1409,23 @@ dhcp_option_hostname(struct dhcp *dhcp, struct netif *netif)
         dhcp_option_byte(dhcp, *p++);
       }
     }
+    if (namelen > 0) {
+      u8_t len;
+      const char *p = netif->hostname;
+      /* Shrink len to available bytes (need 2 bytes for OPTION_HOSTNAME
+         and 1 byte for trailer) */
+      size_t available = DHCP_OPTIONS_LEN - dhcp->options_out_len - 3;
+      LWIP_ASSERT("DHCP: hostname is too long!", namelen <= available);
+      len = LWIP_MIN(namelen, available);
+      dhcp_option(dhcp, DHCP_OPTION_CLIENT_FQDN, namelen+3);
+      dhcp_option_byte(dhcp, 1);  // 1 или 5
+      dhcp_option_byte(dhcp, 0);
+      dhcp_option_byte(dhcp, 0);
+      while (len--) {
+        dhcp_option_byte(dhcp, *p++);
+      }
+    }
+    
   }
 }
 #endif /* LWIP_NETIF_HOSTNAME */

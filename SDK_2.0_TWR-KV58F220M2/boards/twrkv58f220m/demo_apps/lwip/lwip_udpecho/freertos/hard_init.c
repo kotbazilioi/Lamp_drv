@@ -43,8 +43,9 @@
 #include "fsl_i2c.h"
 #include "fsl_i2c_edma.h"
 #include "fsl_dmamux.h"
-#include "heap_3.h"
+//#include "heap_3.h"
 #include <stdio.h>
+#include "lwip/dhcp.h"
   /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -68,6 +69,7 @@
 
 //#define SPI0_SIZE 500U        /*! Transfer dataSize */
 #define SPI0_BAUDRATE 10000U /*! Transfer baudrate - 500k */
+#define SPI0_BAUDRATE_DELAY 26
 
 #define SPI1_DSPI_MASTER_BASEADDR SPI1
 #define SPI1_DSPI_MASTER_DMA_MUX_BASE DMAMUX_BASE
@@ -86,8 +88,8 @@
 
 //#define SPI0_SIZE 500U        /*! Transfer dataSize */
 #define SPI1_BAUDRATE 20000U /*! Transfer baudrate - 500k */
-#define SPI1_BAUDRATE_LOW 100000U /*! Transfer baudrate - 500k */
-
+#define SPI1_BAUDRATE_LOW 10000U /*! Transfer baudrate - 500k */
+#define SPI1_BAUDRATE_DELAY SPI0_BAUDRATE_DELAY
 
 /* The converter A's channels to sample. */
 #define ADC0_CH0A 0U
@@ -166,6 +168,8 @@
 #define ADC1_CH3B_MUX_NUM 0U
 #define ADC1_CH3B_ENABLE_DIFF false
 
+#define delay_spi_tx 400
+#define SPI1_SOFT 0
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -178,7 +182,7 @@
     uint16_t HSADC1_sampleMask;
     uint16_t ct_hsadc0,ct_hsadc1;
     uint8_t flag_front_strob[6]={0};
-    
+    uint8_t flag_set_ip=1;
    
     edma_transfer_config_t hsadc0_dma_transferConfig_4;
     edma_config_t hsadc0_dma_Config_4;
@@ -235,8 +239,11 @@
           
   // __root uint16_t data_hsadc0_buf[8][256]@0x2001A540;
     uint32_t data_transfert_hsadc0=0;
-    
-    
+       // Enet var
+    struct netif fsl_netif0;
+    ip4_addr_t fsl_netif0_ipaddr, fsl_netif0_netmask, fsl_netif0_gw;
+     ip4_addr_t ipdns;
+       err_t status_dns=0;
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -285,7 +292,7 @@ edma_handle_t dspi1EdmaSlaveTxDataToTxRegHandle;
  uint32_t rxFifoFilter[1] = {0};
 volatile bool txComplete = false;
 volatile bool rxComplete = false;
-
+uint8_t flag_save_param;
   uint32_t ct_can_frame=0;
   uint8_t flag_end_can_frame=0;
 
@@ -1176,12 +1183,11 @@ void SPI0_init (void)
     masterConfig.ctarConfig.baudRate = SPI0_BAUDRATE;
     masterConfig.ctarConfig.bitsPerFrame = 8U;
     masterConfig.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
-    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
+    masterConfig.ctarConfig.cpha = kDSPI_ClockPhaseSecondEdge;
     masterConfig.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = 1000000000U / SPI0_BAUDRATE;
-    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = 1000000000U / SPI0_BAUDRATE;
-    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = 1000000000U / SPI0_BAUDRATE;
-
+    masterConfig.ctarConfig.pcsToSckDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
+    masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
+    masterConfig.ctarConfig.betweenTransferDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
 
 
   
@@ -1231,6 +1237,10 @@ void SPI0_TX (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t data_
       masterXfer.configFlags = kDSPI_MasterCtar0 | kDSPI_MasterPcs0 | kDSPI_MasterPcsContinuous;
       masterConfig.whichPcs = kDSPI_Pcs0;//SPI0_DSPI_MASTER_PCS_FOR_INIT;
       masterConfig.pcsActiveHighOrLow = kDSPI_PcsActiveLow;
+      
+      masterConfig.ctarConfig.pcsToSckDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
+      masterConfig.ctarConfig.lastSckToPcsDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
+      masterConfig.ctarConfig.betweenTransferDelayInNanoSec = delay_spi_tx;//1000000000U / SPI0_BAUDRATE;
 
       masterConfig.enableContinuousSCK = false;
       masterConfig.enableRxFifoOverWrite = false;
@@ -1278,7 +1288,7 @@ void DSPI1_MasterUserCallback(SPI_Type *base, dspi_master_edma_handle_t *handle,
     }
      
 }
-
+#if SPI1_SOFT != 1
 void SPI1_init (void)
 {
 
@@ -1349,9 +1359,9 @@ void SPI1_init (void)
     masterConfig1.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
     masterConfig1.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
     masterConfig1.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig1.ctarConfig.pcsToSckDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
-    masterConfig1.ctarConfig.lastSckToPcsDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
-    masterConfig1.ctarConfig.betweenTransferDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.pcsToSckDelayInNanoSec = delay_spi_tx;//1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.lastSckToPcsDelayInNanoSec = delay_spi_tx;//SPI1_BAUDRATE_DELAY;//1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.betweenTransferDelayInNanoSec = delay_spi_tx;//1000000000U / SPI1_BAUDRATE;
   
 
   
@@ -1396,9 +1406,9 @@ void SPI1_TX (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t data_
     masterConfig2.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
     masterConfig2.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
     masterConfig2.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig2.ctarConfig.pcsToSckDelayInNanoSec = 200;// 1000000000U / SPI1_BAUDRATE_LOW;
-    masterConfig2.ctarConfig.lastSckToPcsDelayInNanoSec = 200;//1000000000U / SPI1_BAUDRATE_LOW;
-    masterConfig2.ctarConfig.betweenTransferDelayInNanoSec = 0;//1000000000U / SPI1_BAUDRATE_LOW;
+    masterConfig2.ctarConfig.pcsToSckDelayInNanoSec = delay_spi_tx;// 1000000000U / SPI1_BAUDRATE_LOW;
+    masterConfig2.ctarConfig.lastSckToPcsDelayInNanoSec = delay_spi_tx;//SPI1_BAUDRATE_DELAY;//1000000000U / SPI1_BAUDRATE_LOW;
+    masterConfig2.ctarConfig.betweenTransferDelayInNanoSec = delay_spi_tx;//;//1000000000U / SPI1_BAUDRATE_LOW;
    
     /* Start master transfer */
     masterXfer.txData = SPI_masterTxData;
@@ -1416,7 +1426,7 @@ void SPI1_TX (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t data_
 
       masterConfig2.enableContinuousSCK = false;
       masterConfig2.enableRxFifoOverWrite = false;
-      masterConfig2.enableModifiedTimingFormat = false;
+      masterConfig2.enableModifiedTimingFormat = true;
       masterConfig2.samplePoint = kDSPI_SckToSin2Clock;
 
       srcClock_Hz = CLOCK_GetFreq(DSPI1_MASTER_CLK_SRC);
@@ -1468,9 +1478,9 @@ void SPI1_TX_7bit (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t 
     masterConfig1.ctarConfig.cpol = kDSPI_ClockPolarityActiveHigh;
     masterConfig1.ctarConfig.cpha = kDSPI_ClockPhaseFirstEdge;
     masterConfig1.ctarConfig.direction = kDSPI_MsbFirst;
-    masterConfig1.ctarConfig.pcsToSckDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
-    masterConfig1.ctarConfig.lastSckToPcsDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
-    masterConfig1.ctarConfig.betweenTransferDelayInNanoSec = 1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.pcsToSckDelayInNanoSec = delay_spi_tx;//1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.lastSckToPcsDelayInNanoSec = delay_spi_tx;//SPI1_BAUDRATE_DELAY;//1000000000U / SPI1_BAUDRATE;
+    masterConfig1.ctarConfig.betweenTransferDelayInNanoSec = delay_spi_tx;//1000000000U / SPI1_BAUDRATE;
    
 
     
@@ -1490,9 +1500,9 @@ void SPI1_TX_7bit (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t 
 
       masterConfig1.enableContinuousSCK = false;
       masterConfig1.enableRxFifoOverWrite = false;
-      masterConfig1.enableModifiedTimingFormat = false;
-      masterConfig1.samplePoint = kDSPI_SckToSin2Clock;
-
+      masterConfig2.enableModifiedTimingFormat = true;
+      masterConfig2.samplePoint = kDSPI_SckToSin2Clock;
+      
       srcClock_Hz = CLOCK_GetFreq(DSPI1_MASTER_CLK_SRC);
       DSPI_MasterInit(SPI1_DSPI_MASTER_BASEADDR, &masterConfig1, srcClock_Hz);
 ////    }
@@ -1523,7 +1533,84 @@ void SPI1_TX_7bit (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t 
 
 
 }
+#else
+void send_spi1_byte (uint8_t byte,uint8_t bit)
+{
+  uint8_t ct_bit;
+  uint8_t mask=0;
+  //static inline void GPIO_ClearPinsOutput(GPIO_Type* base, uint32_t mask)
+  //static inline void GPIO_SetPinsOutput(GPIO_Type* base, uint32_t mask)
+  mask=1;
+  for(ct_bit=0;ct_bit<bit;ct_bit++)
+  {
+    
+    if ((byte&mask)==0)
+    {
+      GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_SO_GPIO,1<<BOARD_INITPINS_DRV_SO_PIN); 
+    }
+    else
+    {
+      GPIO_SetPinsOutput(BOARD_INITPINS_DRV_SO_GPIO,1<<BOARD_INITPINS_DRV_SO_PIN);  
+    }
+    mask=(mask<<1);  
+  vTaskDelay(2);
+  GPIO_SetPinsOutput(BOARD_INITPINS_DRV_CLK_GPIO,1<<BOARD_INITPINS_DRV_CLK_PIN);  
+  vTaskDelay(2);  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_CLK_GPIO,1<<BOARD_INITPINS_DRV_CLK_PIN);  
+  vTaskDelay(2); 
+  }
+   
+}
+void SPI1_init (void)
+{
+      gpio_pin_config_t out_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 1U
+    };
+  PORT_SetPinMux(BOARD_INITPINS_DRV_SO_PORT, BOARD_INITPINS_DRV_SO_PIN, kPORT_MuxAsGpio);
+  
+  PORT_SetPinMux(BOARD_INITPINS_DRV_CLK_PORT, BOARD_INITPINS_DRV_CLK_PIN, kPORT_MuxAsGpio);
+  
+  GPIO_PinInit(BOARD_INITPINS_DRV_SO_GPIO, BOARD_INITPINS_DRV_SO_PIN, &out_config);
+  
+  GPIO_PinInit(BOARD_INITPINS_DRV_CLK_GPIO, BOARD_INITPINS_DRV_CLK_PIN, &out_config);
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_SO_GPIO,1<<BOARD_INITPINS_DRV_SO_PIN);  
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_CLK_GPIO,1<<BOARD_INITPINS_DRV_CLK_PIN);    
+}
+void SPI1_TX (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t data_size,uint8_t psc)
+{
+  uint16_t ct_byte=0;
+  
+  for(ct_byte=0;ct_byte<data_size;ct_byte++)
+    {
+      send_spi1_byte(SPI_masterTxData[ct_byte],8);
+    }
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_SO_GPIO,1<<BOARD_INITPINS_DRV_SO_PIN);  
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_CLK_GPIO,1<<BOARD_INITPINS_DRV_CLK_PIN);   
+  isTransferCompleted1=1;
 
+}
+void SPI1_TX_7bit (uint8_t *SPI_masterTxData,uint8_t *SPI_masterRxData,uint32_t data_size,uint8_t psc)
+{
+  
+  uint16_t ct_byte=0;
+  
+  for(ct_byte=0;ct_byte<data_size;ct_byte++)
+    {
+      send_spi1_byte(SPI_masterTxData[ct_byte],7);
+    }
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_SO_GPIO,1<<BOARD_INITPINS_DRV_SO_PIN);  
+  
+  GPIO_ClearPinsOutput(BOARD_INITPINS_DRV_CLK_GPIO,1<<BOARD_INITPINS_DRV_CLK_PIN);   
+  isTransferCompleted1=1;
+  
+}
+#endif
 
 uint8_t can_data_out[128];
 uint32_t len_out_can=0;
@@ -1573,16 +1660,7 @@ static void flexcan_callback(CAN_Type *base, flexcan_handle_t *handle, status_t 
                xSemaphoreGiveFromISR(xBinarySemaphore_CAN,&xHigherPriorityTaskWoken);
                if( xHigherPriorityTaskWoken == pdTRUE )
                 {
-     /* Выдача семафора разблокирует задачу, и приоритет разблокированной
-        задачи выше, чем у текущей выполняющейся задачи - поэтому контекст
-        выполнения переключается принудительно в разблокированную (с более
-        высоким приоритетом) задачу.
-        ВНИМАНИЕ: макрос, реально используемый для переключения контекста
-        из ISR, зависит от конкретного порта FreeRTOS. Здесь указано
-        имя макроса, корректное для порта Open Watcom DOS. Другие порты
-        FreeRTOS могут использовать другой синтаксис. Для определения
-        используемого синтаксиса обратитесь к примерам, предоставленным
-        вместе с портом FreeRTOS. */
+     
                  taskYIELD();
               }
         status=0;
@@ -1802,12 +1880,17 @@ void data_load_config (ip4_addr_t* netif0_ipaddr,ip4_addr_t* netif0_netmask,ip4_
     crc_flash[2] =  *((uint32_t*)(IP_CONFIG_A+8));
     crc_flash[1] =  *((uint32_t*)(IP_CONFIG_A+4));
     crc_flash[0] =  *((uint32_t*)(IP_CONFIG_A));
-    
+ //   char * name;
 
      //Р—Р°РіСЂСѓР·РєР° Р°РґСЂРµСЃРѕРІ CAN Рё IP
+     //FMC->PFB0CR |= 1<<19;
     
+       
+     delay(10000);
+     
     InitCrc16(CRC0, 0xFFFFFFFFU);
-    FMC->PFB0CR |= 1<<19;
+   
+ 
     CRC_WriteData(CRC0, (const uint8_t *)crc_flash, 28);
     crc_symm[0] = CRC_Get16bitResult(CRC0);
     
@@ -1816,6 +1899,8 @@ void data_load_config (ip4_addr_t* netif0_ipaddr,ip4_addr_t* netif0_netmask,ip4_
               netif0_ipaddr->addr=crc_flash[0];
               netif0_netmask->addr=crc_flash[3];
               netif0_gw->addr=crc_flash[4];
+              memcpy(FW_data.V_Name_dev,&(crc_flash[5]),12);
+              
               
     }
     else
@@ -1827,23 +1912,28 @@ void data_load_config (ip4_addr_t* netif0_ipaddr,ip4_addr_t* netif0_netmask,ip4_
        
        
               crc_flash[0]=netif0_ipaddr->addr;
-              crc_flash[1]=ID_TX_DEF;
+              crc_flash[1]=0;
               crc_flash[2]=ID_RX0_DEF;
               crc_flash[3]=netif0_netmask->addr;
               crc_flash[4]=netif0_gw->addr;
-              crc_flash[5]=configIP_ADDR0;
-              crc_flash[6]=configIP_ADDR0;
-              crc_flash[7]=configIP_ADDR0;
+              
+              
+                memcpy(&(crc_flash[5]),"DRV_fon",sizeof("DRV_fon"));
+                //(char*)crc_flash=name;
          
               InitCrc16(CRC0, 0xFFFFFFFFU);
               CRC_WriteData(CRC0, (const uint8_t *)crc_flash, 28);
               crc_flash[7] = CRC_Get16bitResult(CRC0);
               
+               uint32_t PFB0CR_restore = FMC-> PFB0CR;
+              FMC-> PFB0CR = PFB0CR_restore | 1<<19;
+     
              if (progSector( IP_CONFIG_A, (uint32_t*)crc_flash, 32))
                        {
                           PRINTF("Error prog LEN FW2 \r\n"); 
                         }
 
+              FMC-> PFB0CR=PFB0CR_restore;
                 //taskEXIT_CRITICAL();
 //                
        
@@ -1865,6 +1955,7 @@ void data_load_config (ip4_addr_t* netif0_ipaddr,ip4_addr_t* netif0_netmask,ip4_
     FW_data.V_IP_GET[1]=(uint32_t)crc_flash[4]>>8;
     FW_data.V_IP_GET[2]=(uint32_t)crc_flash[4]>>16;
     FW_data.V_IP_GET[3]=(uint32_t)crc_flash[4]>>24;
+    FW_data.V_DHCP=crc_flash[1];
 }
 /*
  * @brief Main function
@@ -2058,60 +2149,6 @@ void I2C_init (void)
     I2C_MasterInit(I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
 
  
-    
-////////////////////////////////////    i2c_master_config_t masterConfig;
-////////////////////////////////////    uint32_t sourceClock;
-////////////////////////////////////    
-////////////////////////////////////    edma_config_t config;
-////////////////////////////////////
-////////////////////////////////////
-////////////////////////////////////
-////////////////////////////////////    /*Init EDMA for example*/
-////////////////////////////////////    DMAMUX_Init(I2C_DMAMUX_BASEADDR);
-////////////////////////////////////    EDMA_GetDefaultConfig(&config);
-////////////////////////////////////    EDMA_Init(I2C_DMA_BASEADDR, &config);
-////////////////////////////////////
-////////////////////////////////////   /// PRINTF("\r\nI2C board2board EDMA example -- Master transfer.\r\n");
-////////////////////////////////////
-////////////////////////////////////    /* Set up i2c master to send data to slave*/
-////////////////////////////////////    /* First data in txBuff is data length of the transmiting data. */
-////////////////////////////////////    g_master_txBuff[0] = I2C_DATA_LENGTH - 1U;
-////////////////////////////////////    for (uint32_t i = 1U; i < I2C_DATA_LENGTH; i++)
-////////////////////////////////////    {
-////////////////////////////////////        g_master_txBuff[i] = i - 1;
-////////////////////////////////////    }
-////////////////////////////////////
-////////////////////////////////////////////    PRINTF("Master will send data :");
-////////////////////////////////////////////    for (uint32_t i = 0U; i < I2C_DATA_LENGTH - 1U; i++)
-////////////////////////////////////////////    {
-////////////////////////////////////////////        if (i % 8 == 0)
-////////////////////////////////////////////        {
-////////////////////////////////////////////            PRINTF("\r\n");
-////////////////////////////////////////////        }
-////////////////////////////////////////////        PRINTF("0x%2x  ", g_master_txBuff[i + 1]);
-////////////////////////////////////////////    }
-////////////////////////////////////////////    PRINTF("\r\n\r\n");
-////////////////////////////////////
-////////////////////////////////////    /*
-////////////////////////////////////     * masterConfig->baudRate_Bps = 100000U;
-////////////////////////////////////     * masterConfig->enableStopHold = false;
-////////////////////////////////////     * masterConfig->glitchFilterWidth = 0U;
-////////////////////////////////////     * masterConfig->enableMaster = true;
-////////////////////////////////////     */
-////////////////////////////////////    I2C_MasterGetDefaultConfig(&masterConfig);
-////////////////////////////////////    masterConfig.baudRate_Bps = I2C_BAUDRATE;
-////////////////////////////////////
-////////////////////////////////////    sourceClock = I2C_MASTER_CLK_FREQ;
-////////////////////////////////////
-////////////////////////////////////    I2C_MasterInit(I2C_MASTER_BASEADDR, &masterConfig, sourceClock);
-////////////////////////////////////
-////////////////////////////////////    memset(&g_m_dma_handle, 0, sizeof(g_m_dma_handle));
-////////////////////////////////////
-////////////////////////////////////    
-////////////////////////////////////    
-////////////////////////////////////   DMAMUX_SetSource(I2C_DMAMUX_BASEADDR, I2C_DMA_CHANNEL, DMA_REQUEST_SRC);
-////////////////////////////////////   EDMA_CreateHandle(&edmaHandle,I2C_DMA_BASEADDR, I2C_DMA_CHANNEL);
-////////////////////////////////////   DMAMUX_EnableChannel(I2C_DMAMUX_BASEADDR, I2C_DMA_CHANNEL);
    
    
 }
@@ -2138,8 +2175,9 @@ void Dac_run (i2c_direction_t dir, uint8_t* data, uint8_t adress, uint8_t comman
     I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
         
 }
-void I2C_run (i2c_direction_t dir, uint8_t* data, uint8_t adress, uint8_t command, uint8_t LENGTH)
+status_t  I2C_run (i2c_direction_t dir, uint8_t* data, uint8_t adress, uint8_t command, uint8_t LENGTH)
 {
+  status_t status;
   
 ////  void ssd1306_I2C_WriteMulti(I2C_Type* I2Cx, uint8_t address, uint8_t reg, uint8_t* data, uint16_t count) {
 
@@ -2158,8 +2196,9 @@ void I2C_run (i2c_direction_t dir, uint8_t* data, uint8_t adress, uint8_t comman
     masterXfer.flags          = kI2C_TransferDefaultFlag;
     I2C0->FLT|=0x0f;
 
-    I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
-        
+    status=I2C_MasterTransferBlocking(I2C_MASTER_BASEADDR, &masterXfer);
+    return status;    
+    
         
 ////}
 
@@ -2239,15 +2278,60 @@ void I2C_run (i2c_direction_t dir, uint8_t* data, uint8_t adress, uint8_t comman
 //////////////////////////////////////////////////  }
 }
 
-void hard_config (void)
+void set_color_power (uint8_t r,uint8_t g,uint8_t b, uint8_t ir)
 {
-//  delay(10000000);
-    init_system_heap(); //Инициализация динамического выделения памяти 
+  uint16_t ct_dot_pix=0;
+  
+  for (ct_dot_pix=0;ct_dot_pix<all_modul*16;ct_dot_pix++)
+  {
+    lamp_state.led_data_r[ct_dot_pix]=K_CORR_R[ct_dot_pix]+(r>>1);
+    lamp_state.led_data_g[ct_dot_pix]=K_CORR_G[ct_dot_pix]+(g>>1);
+    lamp_state.led_data_b[ct_dot_pix]=K_CORR_B[ct_dot_pix]+(b>>1);
+    lamp_state.led_data_ir[ct_dot_pix]=K_CORR_IR[ct_dot_pix]+(ir>>1);
+  } 
+lamp_state.reload_dot=1;
+}
+void smtp_serverFound(const char *name, struct ip_addr *ipaddr, void *arg)
+{
+  if ((ipaddr!=0) )
+  {
+////    smtp.serverIP.addr = ipaddr->addr;
+////    smtp.state = SMTP_NAME_RESOLVED;
+////    if (smtp_connect() == ERR_OK)
+////      return;
+////    smtp.lastError = SMTP_CONNECT_FAILED;
+    status_dns=1;
+  }
+//  else
+////    smtp.lastError = SMTP_UNKNOWN_HOST;
+////  smtp.state = SMTP_IDLE;
+  {
+    status_dns=0;
+//    flag_set_ip=0;
+  }  
+}
+HeapRegion_t pxHeapRegions_mkv58;
+#pragma segment="HEAP"
+void     hard_config (void)
+{
+ // delay(1000000);
+ // 
+    //init_system_heap(); //Инициализация динамического выделения памяти 
+    
+   pxHeapRegions_mkv58.pucStartAddress=(uint8_t*)(__segment_begin( "HEAP"));
+  pxHeapRegions_mkv58.xSizeInBytes= (size_t)((unsigned char *)__segment_end( "HEAP") - (unsigned char *)__segment_begin( "HEAP")); 
+ 
+//  pxHeapRegions_f107->pucStartAddress = (uint8_t*)(__segment_begin( "HEAP"));
+//  pxHeapRegions_f107->xSizeInBytes = (size_t)((unsigned char *)__segment_end( "HEAP") - (unsigned char *)__segment_begin( "HEAP")); 
+  vPortDefineHeapRegions(&pxHeapRegions_mkv58);
+  GPIO_SetPinsOutput(BOARD_INITPINS_DRV_OFF_GPIO,1<<BOARD_INITPINS_DRV_OFF_PIN);
+  
     SIM_GetUniqueId(&ID_STR); //Считывание серийный номер 
     long long Ser;
           Ser = ID_STR.ML;
           Ser = Ser <<32;
           Ser |= ID_STR.L;
+          ID_STR.L = ID_STR.L|0x10;
       char* p = (char*)&Ser;
         for (int i = 0; i <= 7; i++)
           {
@@ -2255,9 +2339,7 @@ void hard_config (void)
             FW_data.V_ID_MAC[i]=*(p + i);
           }
 
-   // Enet var
-    static struct netif fsl_netif0;
-    ip4_addr_t fsl_netif0_ipaddr, fsl_netif0_netmask, fsl_netif0_gw;
+
    //FTM var
     ftm_config_t ftmInfo;
     ftm_chnl_pwm_signal_param_t ftmParam;
@@ -2281,6 +2363,7 @@ void hard_config (void)
   ///  UART_dma_init ();
     progFLASH_init();//Init flash controller
     
+    data_load_config(&fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw);
   //  SPI1_init();
 
     //Ftm init
@@ -2305,7 +2388,7 @@ void hard_config (void)
     GPIO_SetPinsOutput(GPIOB, 1u << PIN9_IDX);    
     GPIO_PinInit (GPIOC,PIN15_IDX,&config_out);
     GPIO_SetPinsOutput(GPIOC, 1u << PIN15_IDX);
-
+    GPIO_PinInit (GPIOC,PIN12_IDX,&config_out);
     delay(100000);
      
 ////    
@@ -2327,20 +2410,37 @@ void hard_config (void)
 
    
 
-    data_load_config(&fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw);
+  
     
   
 
     tcpip_init(NULL, NULL);
+    if (FW_data.V_DHCP!=1)
+      {
+        netif_add(&fsl_netif0, &fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw, NULL, ethernetif_init, tcpip_input);
+      }
+    else
+      {
+        netif_add(&fsl_netif0, NULL, NULL, NULL, NULL,ethernetif_init, tcpip_input);
+      }
+        netif_set_default(&fsl_netif0);
+        netif_set_up(&fsl_netif0);
+        netif_set_hostname(&fsl_netif0,"drv_fon1.csort.local"); 
+       IP4_ADDR(&ipdns, 192,168,88,1);
+       dns_setserver (0,&ipdns);
+       IP4_ADDR(&ipdns, 192,168,88,1);
+       dns_setserver (1,&ipdns);
+       
+       status_dns=dns_gethostbyname ("drv_fon1.csort.local", &ipdns, smtp_serverFound, NULL);
+       status_dns++;
+    
+    if (FW_data.V_DHCP!=0)
+     {
 
-    netif_add(&fsl_netif0, &fsl_netif0_ipaddr, &fsl_netif0_netmask, &fsl_netif0_gw, NULL, ethernetif_init, tcpip_input);
-
-    netif_set_default(&fsl_netif0);
-    netif_set_up(&fsl_netif0);
-
-    http_server_netconn_init();
-
-    udpecho_init();
+       dhcp_start(&fsl_netif0);
+       flag_set_ip=0;
+     }
+   
 //
 //    PRINTF("\r\n************************************************\r\n");
 //    PRINTF(" Csort boot loader start \r\n");
@@ -2355,7 +2455,7 @@ void hard_config (void)
 //    PRINTF(" CAN Adress     : RX0=0x%X\r\n", can_rx_addr);
 //    PRINTF("************************************************\r\n");
 
-///delay(10000000);
+    delay(50000000);
     
       SPI1_init();
 //////      isTransferCompleted1=false;
@@ -2370,7 +2470,10 @@ void hard_config (void)
       
       I2C_init();
       
+      
      HSADC0_init();
+      
+      
  ////  HSADC1_init();
      start_hsadc();
 //////////////////////     CMP_init();
@@ -2381,4 +2484,43 @@ void hard_config (void)
   //  SSD1306_DrawRectangle(10,10,30,30,1);
 
    
+}
+void save_settings (void)
+{
+
+
+    uint32_t crc_symm[8]={0};
+  //  uint32_t crc_flash[8]={0};
+    
+    
+    crc_symm[7] =  *((uint32_t*)(IP_CONFIG_A+28));
+    crc_symm[6] =  *((uint32_t*)(IP_CONFIG_A+24));
+    crc_symm[5] =  *((uint32_t*)(IP_CONFIG_A+20));
+    crc_symm[4] =  *((uint32_t*)(IP_CONFIG_A+16));
+    crc_symm[3] =  *((uint32_t*)(IP_CONFIG_A+12));
+    crc_symm[2] =  *((uint32_t*)(IP_CONFIG_A+8));
+    crc_symm[1] =  *((uint32_t*)(IP_CONFIG_A+4));
+    crc_symm[0] =  *((uint32_t*)(IP_CONFIG_A));
+    
+    crc_symm[0] = (uint32_t)(FW_data.V_IP_CONFIG[0]|(FW_data.V_IP_CONFIG[1]<<8)|(FW_data.V_IP_CONFIG[2]<<16)|(FW_data.V_IP_CONFIG[3]<<24));
+    crc_symm[3] = (uint32_t)(FW_data.V_IP_MASK[0]|(FW_data.V_IP_MASK[1]<<8)|(FW_data.V_IP_MASK[2]<<16)|(FW_data.V_IP_MASK[3]<<24));
+    crc_symm[4] = (uint32_t)(FW_data.V_IP_GET[0]|(FW_data.V_IP_GET[1]<<8)|(FW_data.V_IP_GET[2]<<16)|(FW_data.V_IP_GET[3]<<24));
+    crc_symm[1]=FW_data.V_DHCP;
+    crc_symm[2]=ID_RX0_DEF;
+    memcpy(&(crc_symm[5]),FW_data.V_Name_dev,strlen(FW_data.V_Name_dev));
+    
+    
+    
+    InitCrc16(CRC0, 0xFFFFFFFFU);
+    CRC_WriteData(CRC0, (const uint8_t *)crc_symm, 28);
+    crc_symm[7] = CRC_Get16bitResult(CRC0);
+//    uint32_t PFB0CR_restore = FMC-> PFB0CR;
+//    FMC-> PFB0CR = PFB0CR_restore | 1<<19;
+    if (progSector( IP_CONFIG_A, (uint32_t*)crc_symm, 32))
+      {
+        PRINTF("Error prog LEN FW2 \r\n"); 
+      }
+  //  FMC-> PFB0CR=PFB0CR_restore;
+    
+    
 }

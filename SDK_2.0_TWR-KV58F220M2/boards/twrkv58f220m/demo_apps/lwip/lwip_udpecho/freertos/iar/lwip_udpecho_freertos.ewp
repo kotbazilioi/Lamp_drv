@@ -164,7 +164,7 @@
                 </option>
                 <option>
                     <name>OgLibHeap</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGLibAdditionalLocale</name>
@@ -220,8 +220,8 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state>DEBUG</state>
-                    <state>CPU_MKV58F1M0VLL24</state>
+                    <state>NDEBUG</state>
+                    <state>CPU_MKV58F1M0VLQ24</state>
                     <state>USE_RTOS=1</state>
                     <state>PRINTF_ADVANCED_ENABLE=1</state>
                     <state>FSL_RTOS_FREE_RTOS</state>
@@ -378,6 +378,8 @@
                     <state>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\..\..\middleware\lwip_2.0.0\contrib\apps\httpserver</state>
                     <state>$PROJ_DIR$\..\ssd1306</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\..\..\middleware\lwip_2.0.0\src\include\lwip\apps</state>
+                    <state>$PROJ_DIR$\..\..\..\..\..\..\..\middleware\lwip_2.0.0\src\apps\httpd</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -489,11 +491,11 @@
                 </option>
                 <option>
                     <name>IccExceptions2</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IccRTTI2</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OICompilerExtraOption</name>
@@ -685,7 +687,7 @@
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
@@ -808,7 +810,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\MKV58F1M0xxx24_flash.icf</state>
+                    <state>$PROJ_DIR$\MKV58F1M0xxx24_app_remap_to_0x10040000.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -959,7 +961,7 @@
                 </option>
                 <option>
                     <name>IlinkOptInline</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkOptExceptionsAllow</name>
@@ -2445,10 +2447,7 @@
             <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\include\FreeRTOS.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.h</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_5.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\list.c</name>

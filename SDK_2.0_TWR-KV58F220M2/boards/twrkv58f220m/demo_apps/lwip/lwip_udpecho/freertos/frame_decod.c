@@ -29,10 +29,10 @@
 ////                                          ,0,0,0,0,0,0,0,0
 ////                                          ,0,0,0,0,0,0,0,0};
 
-__root const char FW1_VER[32] @ FW1_VER_A ={0,0,0,0,0,0,0,0
-                                          ,0,0,0,0,0,0,0,1
-                                          ,0,0,0,0,0,0,0,0
-                                          ,0,0,0,0,0,0,0,0};
+__root const char FW1_VER[32] @ FW1_VER_A ={1,0,0,0,0,0,0,0
+                                          ,0,0,0,0,(0xff&(__BUILD_NUMBER__>>24)),(0xff&(__BUILD_NUMBER__>>16)),(0xff&(__BUILD_NUMBER__>>8)),(0xff&__BUILD_NUMBER__)
+                                          ,0,0,0,0,0,0,0,__STDC_VERSION__ 
+                                          ,0,0,0,0,0,0,0,1};
 
 //////__root const char FW1_LEN[32] @ FW1_LEN_A={0xff,0x1f,0,0,0,0,0,0
 //////                                          ,0,0,0,0,0,0,0,0
@@ -71,7 +71,10 @@ __root const char FW1_VER[32] @ FW1_VER_A ={0,0,0,0,0,0,0,0
 ////                                               ,0,0,0,0
 //                                                 ,0,0,0,0};
 
-
+__root const uint8_t K_CORR_R[512] @ K_CORR_R_A ;
+__root const uint8_t K_CORR_G[512] @ K_CORR_G_A ;
+__root const uint8_t K_CORR_B[512] @ K_CORR_B_A ;
+__root const uint8_t K_CORR_IR[512] @ K_CORR_IR_A ;
 /*
 __root const char FW1_data[393216]@ FW1;
 __root const char FW2_data[393216]@ FW2;*/

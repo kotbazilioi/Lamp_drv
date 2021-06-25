@@ -45,6 +45,22 @@
  */
 #define SYS_LIGHTWEIGHT_PROT    1
 
+
+
+#define LWIP_DNS                1
+
+#ifndef DNS_SERVER_ADDRESS
+#define DNS_SERVER_ADDRESS(ipaddr)    (ip4_addr_set_u32(ipaddr,ipaddr_addr("192.168.88.1")))
+#endif
+
+#define LWIP_NETIF_HOSTNAME 1
+#define DNS_TABLE_SIZE 2 // количество записей в таблице, по умолчанию 4
+#define DNS_MAX_NAME_LENGTH 32 // макс. длина имени, по умолчанию 256
+#define DNS_MAX_SERVERS 2 // количество DNS-серверов, по умолчанию 2
+#define DNS_DOES_NAME_CHECK 1 // сравнить полученное имя с заданным, по умолчанию 0 
+#define DNS_MSG_SIZE 512
+
+
 /**
  * NO_SYS==0: Use RTOS
  */
@@ -89,7 +105,7 @@
  */
 
 #ifndef MEM_SIZE
-#define MEM_SIZE                (8*1024)
+#define MEM_SIZE                (16*1024)
 #endif
 
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application

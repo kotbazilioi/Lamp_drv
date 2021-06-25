@@ -367,7 +367,7 @@ int progFLASH_init(void)
   status_t result;    /* Return code from each flash driver function */
   
     taskENTER_CRITICAL();
-    
+    //portDISABLE_INTERRUPTS();
     progFLASH_init();
     
     result = FLASH_Erase(&s_flashDriver, adress, len_s, kFTFx_ApiEraseKey);
@@ -475,6 +475,7 @@ int progFLASH_init(void)
 ////////
 ////////        }
         taskEXIT_CRITICAL();
+      //  portENABLE_INTERRUPTS();	
 
 return kStatus_FLASH_Success;
 }

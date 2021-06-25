@@ -264,7 +264,9 @@ void free_z( heap_t *heap, void *mem_ptr ){
        if( tptr == heap->freem )
        { // прошли по кругу и нужного блока не нашли
          PRINTF("Error HEAP free \r\n"); //Ошибка// No Memory
-         while (1){};
+         while (1){
+         
+         };
           break;
        }                
      }

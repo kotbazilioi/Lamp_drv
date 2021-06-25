@@ -873,9 +873,9 @@
 #define LWIP_DNS_SECURE (LWIP_DNS_SECURE_RAND_XID | LWIP_DNS_SECURE_NO_MULTIPLE_OUTSTANDING | LWIP_DNS_SECURE_RAND_SRC_PORT)
 #endif
 /* A list of DNS security features follows */
-#define LWIP_DNS_SECURE_RAND_XID                1
-#define LWIP_DNS_SECURE_NO_MULTIPLE_OUTSTANDING 2
-#define LWIP_DNS_SECURE_RAND_SRC_PORT           4
+//#define LWIP_DNS_SECURE_RAND_XID                1
+//#define LWIP_DNS_SECURE_NO_MULTIPLE_OUTSTANDING 2
+//#define LWIP_DNS_SECURE_RAND_SRC_PORT           4
 
 /** DNS_LOCAL_HOSTLIST: Implements a local host-to-address list. If enabled,
  *  you have to define

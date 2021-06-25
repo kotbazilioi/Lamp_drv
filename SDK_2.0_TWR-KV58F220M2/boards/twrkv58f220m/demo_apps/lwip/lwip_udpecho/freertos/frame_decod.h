@@ -27,7 +27,7 @@
 #define FW1_LEN_A 0x10038000 //4byte LEN
 #define FW1       0x10040000 //Start ADRR FW1
 #define FW1_VER_A 0x10040430 //6byte VER
-#define a_call_data 0x1009e000 // calibrovka lamp_fon
+//#define a_call_data 0x10040450 // calibrovka lamp_fon
 
 ////#define FW2       0x100a0000 //Start ADRR FW2
 #define FW2_VER_A 0x100a0430 //6byte VER
@@ -36,6 +36,10 @@
 
 #define FW_LOADER_VER_A 0x10000430
 #define IP_CONFIG_A 0x10032000
+#define K_CORR_R_A 0x10040450+0x200
+#define K_CORR_G_A 0x10040450+0x400
+#define K_CORR_B_A 0x10040450+0x600
+#define K_CORR_IR_A 0x10040450+0x800
 #define SPI0_SIZE all_modul
 
 #ifdef __cplusplus
@@ -61,6 +65,10 @@ extern SCommands_t frame;
 extern int frame_ct_udp;
 extern bool flag_frame_run_can;
 extern uint32_t ct_timeout_frame;
+extern const uint8_t K_CORR_R[512];
+extern const uint8_t K_CORR_G[512];
+extern const uint8_t K_CORR_B[512];
+extern const uint8_t K_CORR_IR[512];
 
 void InitCrc32(CRC_Type *base, uint32_t seed);
 void InitCrc16(CRC_Type *base, uint32_t seed);

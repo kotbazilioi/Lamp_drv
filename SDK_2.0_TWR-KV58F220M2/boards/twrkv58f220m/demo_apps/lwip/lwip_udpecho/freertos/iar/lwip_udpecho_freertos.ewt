@@ -3085,10 +3085,7 @@
             <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\include\FreeRTOS.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.h</name>
+            <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\portable\MemMang\heap_5.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\..\..\..\..\rtos\freertos_8.2.3\Source\list.c</name>

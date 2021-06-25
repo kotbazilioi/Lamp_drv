@@ -76,7 +76,7 @@
                 </option>
                 <option>
                     <name>OCDownloadVerifyAll</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCProductVersion</name>
@@ -140,7 +140,7 @@
                 </option>
                 <option>
                     <name>OverrideDefFlashBoard</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OCImagesOffset1</name>
@@ -839,7 +839,7 @@
                 <option>
                     <name>CCJLinkResetList</name>
                     <version>6</version>
-                    <state>7</state>
+                    <state>10</state>
                 </option>
                 <option>
                     <name>CCJLinkInterfaceCmdLine</name>
@@ -908,7 +908,7 @@
                 </option>
                 <option>
                     <name>CCSwoClockEdit</name>
-                    <state>30000</state>
+                    <state>2000</state>
                 </option>
                 <option>
                     <name>OCJLinkTraceSource</name>
@@ -1561,7 +1561,7 @@
                 </option>
                 <option>
                     <name>OCDownloadVerifyAll</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCProductVersion</name>
@@ -1577,7 +1577,7 @@
                 </option>
                 <option>
                     <name>UseFlashLoader</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CLowLevel</name>
@@ -2222,7 +2222,7 @@
                 </option>
                 <option>
                     <name>JLinkSpeed</name>
-                    <state>3000</state>
+                    <state>5000</state>
                 </option>
                 <option>
                     <name>CCJLinkDoLogfile</name>
@@ -2270,7 +2270,7 @@
                 </option>
                 <option>
                     <name>CCJLinkSpeedRadioV2</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCUSBDevice</name>
@@ -2385,7 +2385,7 @@
                 </option>
                 <option>
                     <name>CCCpuClockEdit</name>
-                    <state>100</state>
+                    <state>200</state>
                 </option>
                 <option>
                     <name>CCSwoClockAuto</name>

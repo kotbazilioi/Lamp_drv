@@ -31,8 +31,8 @@ define symbol __ICFEDIT_region_ERAM2_end__   = 0x0;
 define symbol __ICFEDIT_region_ERAM3_start__ = 0x0;
 define symbol __ICFEDIT_region_ERAM3_end__   = 0x0;
 /*-Sizes-*/
-define symbol __ICFEDIT_size_cstack__ = 0x400;
-define symbol __ICFEDIT_size_heap__   = 0xa000;
+define symbol __ICFEDIT_size_cstack__ = 0x4000;
+define symbol __ICFEDIT_size_heap__   = 0x13000;
 /**** End of ICF editor section. ###ICF###*/
 
 define symbol __FlashConfig_start__ = 0x10000400;

@@ -288,6 +288,72 @@ set_contrast(255);
      }
 }
 
+void reload_io (void *pvParameters)
+{
+  
+vTaskDelay(100*speed_grade);
+
+
+#if (lamp_sys)
+lamp_state.led_data_b_req=0x00;
+lamp_state.led_data_r_req=0xff;
+lamp_state.led_data_g_req=0x00;
+lamp_state.led_data_ir_req=0x00;
+#else
+lamp_state.led_data_b_req=0xff;
+lamp_state.led_data_r_req=0x00;
+lamp_state.led_data_g_req=0x00;
+lamp_state.led_data_ir_req=0x00;
+#endif
+
+
+  while (1){
+    RSet_lamp_power();
+    if (flag_save_param == 1)
+    {
+    save_settings();
+    flag_save_param=0;
+    }
+    
+    // stoboskop ();
+       if ((fsl_netif0.ip_addr.addr!=0)&&(flag_set_ip!=1))
+      {
+       FW_data.V_IP_CONFIG[0]=fsl_netif0.ip_addr.addr&0x000000ff;
+       FW_data.V_IP_CONFIG[1]=(fsl_netif0.ip_addr.addr&0x0000ff00)>>8;
+       FW_data.V_IP_CONFIG[2]=(fsl_netif0.ip_addr.addr&0x00ff0000)>>16;
+       FW_data.V_IP_CONFIG[3]=(fsl_netif0.ip_addr.addr&0xff000000)>>24;
+       FW_data.V_IP_MASK[0]=(fsl_netif0.netmask.addr&0x000000ff);
+       FW_data.V_IP_MASK[1]=(fsl_netif0.netmask.addr&0x0000ff00)>>8;
+       FW_data.V_IP_MASK[2]=(fsl_netif0.netmask.addr&0x00ff0000)>>16;
+       FW_data.V_IP_MASK[3]=(fsl_netif0.netmask.addr&0xff000000)>>24;
+       FW_data.V_IP_GET[0]=(fsl_netif0.gw.addr&0x000000ff);
+       FW_data.V_IP_GET[1]=(fsl_netif0.gw.addr&0x0000ff00)>>8;
+       FW_data.V_IP_GET[2]=(fsl_netif0.gw.addr&0x00ff0000)>>16;
+       FW_data.V_IP_GET[3]=(fsl_netif0.gw.addr&0xff000000)>>24;
+       flag_set_ip=1;
+       
+       
+       
+    //      ipdns.addr=fsl_netif0.dhcp.server_ip_addr.addr;
+ 
+     //   dns_setserver (0,&ipdns);
+  /* Start DHCP negotiation for a network interface (IPv4) */
+  ////dhcp_start(&gnetif);
+       
+       
+       
+//       status_dns=dns_gethostbyname ("drv_fon1.csort.local", &ipdns, smtp_serverFound, NULL);
+//       status_dns++;
+  
+       
+       
+       }
+       
+       dns_tmr();
+       vTaskDelay(50*speed_grade);
+       
+     }
+}
 
 void start_convert (void *pvParameters)
 {
@@ -297,36 +363,49 @@ void start_convert (void *pvParameters)
 
     
 
+    
    //vTaskDelay(100);
    //lamp_init(power_lamp_0);
-     lamp_init(power_lamp_5);
-  //  start_DCDC();
- 
-     
- //   vTaskDelay(50000);
-   //  stop_DCDC();
+  //  vTaskDelay(1*configTICK_RATE_HZ);
     
-//////     vTaskDelay(5000);
-//////    /* PORTB23 (pin 69) is configured as CMP3_OUT */
-//////      PORT_SetPinMux(PORTB, 23U, 6);
-//////  //    PWM1->SM[0].DISMAP[0] =0x002;
-    vTaskResume(xHandle_reload_io);  
+     lamp_init(power_lamp_1);
+     http_server_netconn_init();
+    
+   //  lamp_init(power_lamp_5);
+     udpecho_init();
+     
+    vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+    xTaskCreate( reload_io, "reload_io", 512, NULL, tskIDLE_PRIORITY+1, &xHandle_reload_io );
+  //  vTaskResume(xHandle_reload_io);  
+    vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+    #if (lamp_sys)
+       lamp_state.lamp_power_req=5000;
+    #else
+       lamp_state.lamp_power_req=30000;
+    #endif
+    set_color_power(lamp_state.led_data_r_req,lamp_state.led_data_g_req,lamp_state.led_data_b_req,0);
+    lamp_state.reload_dot=1;
+    vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+    Hi_DCDC.start_flag=1;  
+      vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+     set_color_power(lamp_state.led_data_r_req,lamp_state.led_data_g_req,lamp_state.led_data_b_req,0);
+    lamp_state.reload_dot=1;
+     vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+    Hi_DCDC.start_flag=1;  
+     vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+     set_color_power(lamp_state.led_data_r_req,lamp_state.led_data_g_req,lamp_state.led_data_b_req,0);
+    lamp_state.reload_dot=1;
+      vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+    Hi_DCDC.start_flag=1;  
+      vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
+     
+     
     vTaskSuspend( xHandle_start_convert );
       
      }
 }
-void reload_io (void *pvParameters)
-{
+ 
 
-
-  while (1){
-    RSet_lamp_power();
-   // stoboskop ();
-       
-
-       vTaskDelay(500*speed_grade);
-     }
-}
 
 void BUS_controll (void *pvParameters)
 {
@@ -404,6 +483,7 @@ uint32_t read_int_flash (char * addr)
    
 
 
+
 int main(void)
 {
 
@@ -415,8 +495,8 @@ int main(void)
                // xTaskCreate( BUS_controll, "BUS_controll", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, NULL );
     xTaskCreate( start_convert, "start_convert", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+1, &xHandle_start_convert );
                // xTaskCreate( start_ethernet, "start_ethernet", 512, NULL, tskIDLE_PRIORITY+1, &xHandle_start_ethernet );
-    xTaskCreate( reload_io, "reload_io", 512, NULL, tskIDLE_PRIORITY+1, &xHandle_reload_io );
-    vTaskSuspend( xHandle_reload_io );
+  //  xTaskCreate( reload_io, "reload_io", 512, NULL, tskIDLE_PRIORITY+1, &xHandle_reload_io );
+ //   vTaskSuspend( xHandle_reload_io );
                    //  vTaskSuspend( xHandle_start_ethernet );
     
    // Start FREERTOS

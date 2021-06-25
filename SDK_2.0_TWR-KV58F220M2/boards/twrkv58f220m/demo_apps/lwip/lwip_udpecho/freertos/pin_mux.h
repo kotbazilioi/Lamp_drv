@@ -94,6 +94,7 @@ void BOARD_InitBootPins(void);
 
 /*! @name PORTE1 (number 2), DVR_SO
   @{ */
+#define BOARD_INITPINS_DRV_SO_GPIO GPIOE /*!<@brief PORT device name: PORTE */    
 #define BOARD_INITPINS_DRV_SO_PORT PORTE /*!<@brief PORT device name: PORTE */
 #define BOARD_INITPINS_DRV_SO_PIN 1U     /*!<@brief PORTE pin index: 1 */
                                          /* @} */
@@ -204,6 +205,7 @@ void BOARD_InitBootPins(void);
                                           /* @} */                                      /* @} */
 /*! @name PORTE2 (number 3), DRV_CLK
   @{ */
+#define BOARD_INITPINS_DRV_CLK_GPIO GPIOE /*!<@brief PORT device name: PORTE */
 #define BOARD_INITPINS_DRV_CLK_PORT PORTE /*!<@brief PORT device name: PORTE */
 #define BOARD_INITPINS_DRV_CLK_PIN 2U     /*!<@brief PORTE pin index: 2 */
                                           /* @} */
