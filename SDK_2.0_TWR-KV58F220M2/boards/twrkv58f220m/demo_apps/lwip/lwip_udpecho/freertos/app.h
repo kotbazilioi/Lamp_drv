@@ -26,14 +26,14 @@
 #define power_lamp_0 0
 #define dy 250
 #define dp 50
-#define lamp_sys 0
+#define lamp_sys 1
 
 #define STATE_ON 1
 #define STATE_OFF 0
-extern uint8_t SPI0_masterRxData[all_modul+1];
-extern uint8_t SPI0_masterTxData[all_modul+1];
-extern uint8_t SPI1_masterRxData[64*all_modul];
-extern uint8_t SPI1_masterTxData[64*all_modul];
+extern uint8_t SPI0_masterRxData[all_modul+1+32];
+extern uint8_t SPI0_masterTxData[all_modul+1+32];
+extern uint8_t SPI1_masterRxData[64*all_modul+32];
+extern uint8_t SPI1_masterTxData[64*all_modul+32];
 //////extern uint8_t led_data[all_modul*4*16];
 //////extern uint8_t led_data_ir[all_modul*4*2];
 //////extern uint8_t led_data_r[all_modul*4*4];

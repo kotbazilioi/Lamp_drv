@@ -1,0 +1,627 @@
+
+#include "lwip/opt.h"
+#include "lwip/arch.h"
+#include "lwip/api.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include "hard_init.h"
+#include "httpd_structs.h"
+#include "fs.h"
+#include "DLib_Config_Full.h"
+#include "httpserver-netconn.h"
+#include "html_page.h"
+#include "heap_3.h"
+#include "base64.h"
+#include "app.h"
+#if LWIP_NETCONN
+
+#ifndef HTTPD_DEBUG
+#define HTTPD_DEBUG         LWIP_DBG_OFF
+#endif
+int fr;
+
+uint8_t page_index;
+
+
+
+
+typedef struct post_data_t
+  {
+    char name[32];    
+    char data[32];    
+    //uint8_t len_par;
+  }post_data_t;
+
+ uint8_t scanf_ip (char* data,uint8_t* ip_mass,uint8_t len_ip)
+  {
+     signed int  ct_char=0;
+     uint16_t mul_k=1;
+     memset(ip_mass,0,4);
+    for(ct_char=len_ip-1;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[3]=(data[ct_char]-0x30)*mul_k+ip_mass[3];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            {// break;
+              return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    ct_char--;
+    mul_k=1;
+    for(;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[2]=(data[ct_char]-0x30)*mul_k+ip_mass[2];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            { 
+              //break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    ct_char--;
+     mul_k=1;
+     for(;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]!='.')
+          {
+            ip_mass[1]=(data[ct_char]-0x30)*mul_k+ip_mass[1];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            { //break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+     ct_char--;
+      mul_k=1;
+     for(;ct_char>=0;ct_char--)
+      {
+        if ((data[ct_char]!='.')||(ct_char!=0))
+          {
+            ip_mass[0]=(data[ct_char]-0x30)*mul_k+ip_mass[0];
+            mul_k=mul_k*10;  
+            if (mul_k>1000)
+            {// break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    return 0;
+  }
+  
+  
+   uint8_t scanf_port (char* data,uint16_t* ip_mass,uint8_t len_ip)
+  {
+     signed int  ct_char=0;
+     uint16_t mul_k=1;
+
+      mul_k=1;
+      *ip_mass=0;
+     for(ct_char=len_ip;ct_char>=0;ct_char--)
+      {
+        if (data[ct_char]>0x39)
+          {
+            return 1;
+          }
+        if (ct_char!=0)
+          {
+            *ip_mass=(data[ct_char-1]-0x30)*mul_k+(*ip_mass);
+            mul_k=mul_k*10;  
+            if (mul_k>10000)
+            {// break;
+            return 1;
+            }
+          }
+        else
+          {
+          break;
+          }
+      }
+    return 0;
+  }
+  void param_run(post_data_t* post_data,uint8_t index)
+{
+  uint8_t IP_buf[4];
+  uint16_t port_n;
+        uint8_t ct_temp0;
+  uint8_t len_mess=0;
+//  if (index==3)
+//  {
+    if (strncmp((char*)post_data->name,"name_dev", sizeof("name_dev")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_Name_dev,0,strlen((char*)FW_data.V_Name_dev));
+            for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+             
+              }
+            memcpy((char*)FW_data.V_Name_dev, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"IP_addr", sizeof("IP_addr")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_CONFIG, (char*)IP_buf,4 );
+            }
+          
+          }
+    else if (strncmp((char*)post_data->name,"Mask_net", sizeof("Mask_net")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_MASK, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"IP_Getway", sizeof("IP_Getway")) == 0)
+          {
+             len_mess=strlen(post_data->data);
+            if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+            {
+              memcpy((uint8_t*)FW_data.V_IP_GET, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"port_http", sizeof("port_http")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              FW_data.V_WEB_PORT=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"login", sizeof("login")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+             memset((char*)FW_data.V_LOGIN,0,strlen((char*)FW_data.V_LOGIN));
+            memcpy((char*)FW_data.V_LOGIN, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"password", sizeof("password")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_PASSWORD,0,strlen((char*)FW_data.V_PASSWORD));
+            memcpy((char*)FW_data.V_PASSWORD, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"Power_lamp", sizeof("Power_lamp")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              lamp_state.lamp_power_req=port_n;
+              //memcpy((uint8_t*)lamp_state.lamp_power_req, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"Color_n", sizeof("Color_n")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              lamp_state.color_index=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"Pixel_n", sizeof("Pixel_n")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              lamp_state.pixel_edit_index=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"save_settings", sizeof("save_settings")) == 0)
+          {
+            len_mess=strlen(post_data->data);
+            if (post_data->data[0]=='1')
+            {
+              
+              
+              //memcpy((uint8_t*)FW_data.V_IP_NTP1, (char*)IP_buf,4 );
+            }
+          }
+    else if (strncmp((char*)post_data->name,"color_fon", sizeof("color_fon")) == 0)
+          {
+          // len_mess=strlen(post_data->data);
+         //   if (scanf_ip ((char*) post_data->data,IP_buf,len_mess)==0)
+         //   {
+         //     memcpy((uint8_t*)FW_data.V_IP_NTP2, (char*)IP_buf,4 );
+         //   }
+          }
+    else if (strncmp((char*)post_data->name,"Power", sizeof("Power")) == 0)
+          {
+           len_mess=strlen(post_data->data);
+        
+           //
+           
+//           if (post_data->data[0]=='-')
+//           {
+//            post_data->data[0]=post_data->data[1];
+//            post_data->data[1]=post_data->data[2];
+//            len_mess--;
+//            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+//            {
+//              
+//              FW_data.V_NTP_CIRCL=(signed char)port_n-2*port_n;
+//            }
+//           }
+//           else
+//           {
+//            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+//            {
+//              
+//              FW_data.V_NTP_CIRCL=(signed char)port_n;
+//            }
+//           
+//           }
+           
+          }
+    else if (strncmp((char*)post_data->name,"time_set", sizeof("time_set")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+          //  memcpy((char*)FW_data.V_PASSWORD, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"mess_on", sizeof("mess_on")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+                memset((char*)FW_data.V_ON_MESS,0,strlen((char*)FW_data.V_ON_MESS));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_ON_MESS, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"mess_off", sizeof("mess_off")) == 0)
+          {
+           // FW_data.V_Name_dev
+            len_mess=strlen(post_data->data);
+            memset((char*)FW_data.V_OFF_MESS,0,strlen((char*)FW_data.V_OFF_MESS));
+              for (ct_temp0=0;ct_temp0<len_mess;ct_temp0++)
+              {
+                if (post_data->data[ct_temp0]==0x2b)
+                  {
+                    post_data->data[ct_temp0]=0x20;
+                  }
+              }
+            memcpy((char*)FW_data.V_OFF_MESS, (char*)post_data->data,len_mess );
+          }
+    else if (strncmp((char*)post_data->name,"output_type", sizeof("output_type")) == 0)
+          {
+           len_mess=strlen(post_data->data);
+            if (scanf_port ((char*) post_data->data,&port_n,len_mess)==0)
+            {
+              FW_data.V_TYPE_OUT=port_n;
+            }
+          }
+    else if (strncmp((char*)post_data->name,"save_all", sizeof("save_all")) == 0)
+          {
+            if (post_data->data[0]==0x31)
+              {
+                flag_global_save_data=1;
+              }
+          }
+    else if (strncmp((char*)post_data->name,"load_def", sizeof("load_def")) == 0)
+          {
+           if (post_data->data[0]==0x31)
+              {
+                flag_global_load_def=1;
+              }
+          }
+    else if (strncmp((char*)post_data->name,"load_boot", sizeof("load_boot")) == 0)
+          {
+           ///jamp_to_boot();
+          }
+    else
+     
+    {
+    
+    }
+    
+//  }
+  
+}
+void parser_post(char* buf_in,uint16_t buf_in_len,uint8_t index)
+{
+uint16_t ct_index,start_pars;
+uint16_t start_par;
+post_data_t elem_post_data;
+
+ for(ct_index=buf_in_len;ct_index>0;ct_index--)
+   {
+     if (buf_in[ct_index]==0x0a)
+       {
+         if ((buf_in[ct_index-2]==0x0a)&&(buf_in[ct_index-1]==0x0d)&&(buf_in[ct_index-3]==0x0d))
+           {
+             start_pars=ct_index+1;
+             ct_index=1;
+           }
+       }
+   }
+ start_par=start_pars;
+ for(ct_index=start_pars;ct_index<=buf_in_len;ct_index++)
+   {
+    // elem_post_data=&post_mess[index_sec];
+     if (buf_in[ct_index]=='=')
+       {
+         
+         memset(elem_post_data.name,0,32);
+         memcpy(elem_post_data.name,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
+         start_par=ct_index+1;
+       }
+     if ((buf_in[ct_index]=='&')||(ct_index==buf_in_len))
+       {
+         memset(elem_post_data.data,0,32);
+         memcpy(elem_post_data.data,(uint8_t*)(buf_in+start_par),(ct_index-start_par));
+         start_par=ct_index+1;
+         param_run(&elem_post_data,index);
+         //case_data_in
+      //   elem_post_data.len_par=index_sec+1;
+       // index_sec++;
+         
+       }
+   }
+ 
+}
+
+
+char buf_list[size_page_bufer]={0};
+
+static void http_server_netconn_serve(struct netconn *conn) 
+{
+  //post_data_t post_data[32];
+  
+
+  struct netbuf *inbuf;
+  err_t recv_err;
+  char* buf;
+  u16_t buflen;
+  struct fs_file file;
+  
+  uint16_t len_buf_list;
+  uint16_t ct_fpass=0;
+  uint16_t start_key=0;
+  uint8_t status=0;
+  /* Read the data from the port, blocking if nothing yet there. 
+   We assume the request (the part we care about) is in one netbuf */
+ recv_err = netconn_recv(conn, &inbuf);
+  if (recv_err == ERR_OK)
+  {
+    if (netconn_err(conn) == ERR_OK) 
+    {
+      netbuf_data(inbuf, (void**)&buf, &buflen);
+         
+      memset((void*)key_http,0,30);
+      
+      for (ct_fpass=0;ct_fpass<1024;ct_fpass++)
+        {
+          if (strncmp((char*)&buf[ct_fpass],"Basic",5) == 0)
+            {
+              start_key=ct_fpass+6;
+              break;
+            }
+        }
+      memcpy((char*)buf_list,(char*)&buf[start_key],16);  
+      unbase64((char*)buf_list,16,&key_http_len,key_http);
+
+  
+   
+      if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) != 0))
+          {          
+            len_buf_list=costr_pass((char*)buf_list);
+            netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+            flag_logon=0;
+          }
+      
+       if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) == 0))
+            {
+              flag_logon=1;
+            }
+            
+      
+    if(strncmp(key_http,"admin:csort",key_http_len) == 0)  
+     {
+      if ((buflen >=5) && (strncmp(buf, "GET /", 5) == 0))
+      {
+        /* Check if request to get ST.gif */ 
+         if (strncmp((char const *)buf,"GET /img/rgb24.bmp",17)==0)
+        {
+          costr_graf_pl_start(conn,buf_list);
+          
+          vTaskDelay(100);
+//          len_buf_list=sizeof((uint8_t*)http_html_hdr);
+//          memcpy(buf_list,http_html_hdr,len_buf_list);
+//          netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+        }         
+        
+      else if (strncmp((char const *)buf,"GET /img/logo.gif",17)==0)
+        {
+          recv_err=fs_open(&file, "/img/logo.gif");           
+          status=netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+          vTaskDelay(100);
+          fs_close(&file);
+          
+        }          
+      else if (strncmp((char const *)buf,"GET /settings.html",17)==0)
+            {
+              page_index=1;
+              len_buf_list=costr_settings((char*)buf_list);
+              status=netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              vTaskDelay(100);
+//              len_buf_list=sizeof((uint8_t*)http_html_hdr);
+//              memcpy(buf_list,http_html_hdr,len_buf_list);
+//              netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+     
+            }
+      else if (strncmp((char const *)buf,"GET /data_strim.html",17)==0)
+            {
+              page_index=2;
+              len_buf_list=costr_logs((char*)buf_list);
+              status=netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              vTaskDelay(100);
+//              len_buf_list=sizeof((uint8_t*)http_html_hdr);
+//              memcpy(buf_list,http_html_hdr,len_buf_list);
+//              netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              
+             // fs_close(&file);
+            }
+      else if((strncmp(buf, "GET /index.html", 15) == 0)||(strncmp(buf, "GET / HTTP/1.1", 14) == 0))
+        {
+         page_index=0;
+         
+//          len_buf_list=costr_page1((char*)buf_list);
+//          status=netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+//          vTaskDelay(100);
+          recv_err=fs_open(&file, "/index.html");           
+          status=netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+          
+          
+//          len_buf_list=strlen(http_html_hdr);
+//          memcpy(buf_list,http_html_hdr,len_buf_list);
+//          netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+
+        }
+        else 
+        {
+          page_index=3;
+          /* Load Error page */
+          fs_open(&file, "/img/404.gif"); 
+          netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+          fs_close(&file);
+          vTaskDelay(100);
+        }
+      }
+    else
+      {
+        if ((buflen >=5) && (strncmp(buf, "POST /", 5) == 0))
+        {  
+          
+              parser_post(buf,buflen,page_index);
+              if (page_index==0)
+              {
+               len_buf_list=costr_page1((char*)buf_list);
+               netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              }
+              if (page_index==1)
+              {
+              len_buf_list=costr_settings((char*)buf_list);
+              netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              }
+              
+              if (page_index==2)
+              {
+              len_buf_list=costr_logs((char*)buf_list);
+              netconn_write(conn, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+              //fs_close(&file);
+              }
+              
+              
+              if (page_index==3)
+              {
+              fs_open(&file, "/img/404.gif"); 
+              netconn_write(conn, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
+              fs_close(&file);
+              }
+          
+        }
+      }  
+    
+    
+    }
+    else
+      {
+         flag_logon=0;     
+      }
+      
+  }
+  
+  }
+  /* Close the connection (server closes in HTTP) */
+  netconn_close(conn);
+  
+  /* Delete the buffer (netconn_recv gives us ownership,
+   so we have to make sure to deallocate the buffer) */
+  netbuf_delete(inbuf);
+}
+
+/** The main function, never returns! */
+static void
+http_server_netconn_thread(void *arg)
+{
+  
+  struct netconn *conn, *newconn;
+  err_t err;
+    for(;;)
+  { 
+  LWIP_UNUSED_ARG(arg);
+  
+  /* Create a new TCP connection handle */
+  /* Bind to port 80 (HTTP) with default IP address */
+#if LWIP_IPV6
+  conn = netconn_new(NETCONN_TCP_IPV6);
+  netconn_bind(conn, IP6_ADDR_ANY, 80);
+#else /* LWIP_IPV6 */
+  conn = netconn_new(NETCONN_TCP);
+  netconn_bind(conn, IP_ADDR_ANY, 80);
+#endif /* LWIP_IPV6 */
+  LWIP_ERROR("http_server: invalid conn", (conn != NULL), return;);
+  
+  /* Put the connection into LISTEN state */
+  netconn_listen(conn);
+  
+  do {
+    err = netconn_accept(conn, &newconn);
+    if (err == ERR_OK) {
+      http_server_netconn_serve(newconn);
+      
+      netconn_delete(newconn);
+    }
+  } while(err == ERR_OK);
+  
+  LWIP_DEBUGF(HTTPD_DEBUG,
+    ("http_server_netconn_thread: netconn_accept received error %d, shutting down",
+    err));
+//  netconn_close(conn);
+//  netconn_delete(conn);
+  vTaskDelay(100);
+  }
+}
+
+/** Initialize the HTTP server (start its thread) */
+void http_server_netconn_init(void)
+{
+  sys_thread_new("http_server_netconn", http_server_netconn_thread, NULL,8*1024, tskIDLE_PRIORITY+2);
+}
+
+#endif /* LWIP_NETCONN*/

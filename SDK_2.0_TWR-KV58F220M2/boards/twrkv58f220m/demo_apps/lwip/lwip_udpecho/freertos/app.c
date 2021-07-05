@@ -25,11 +25,11 @@
 #include "app.h"
 uint8_t flag_global_save_data=0;
 uint8_t flag_global_load_def=0;
-uint8_t SPI0_masterRxData[all_modul+1] = {0U};
-uint8_t SPI0_masterTxData[all_modul+1] = {0U};
+uint8_t SPI0_masterRxData[all_modul+1+32] = {0U};
+uint8_t SPI0_masterTxData[all_modul+1+32] = {0U};
 
-uint8_t SPI1_masterRxData[64*all_modul] = {0U};
-uint8_t SPI1_masterTxData[64*all_modul] = {0U};
+uint8_t SPI1_masterRxData[64*all_modul+32] = {0U};
+uint8_t SPI1_masterTxData[64*all_modul+32] = {0U};
 //////uint8_t led_data[all_modul*4*16]={0};
 //////uint8_t led_data_r[all_modul*4*4]={0};
 //////uint8_t led_data_g[all_modul*4*4]={0};
@@ -818,7 +818,7 @@ void DAC_slow_swich (uint16_t power)
   if (lamp_state.lamp_power<power)
     {    
         
-     for (ct_mass=lamp_state.lamp_power;ct_mass<power;ct_mass=ct_mass+0xff)
+     for (ct_mass=lamp_state.lamp_power;ct_mass<power;ct_mass=ct_mass+100)
      {
         for (ct_mod=0;ct_mod<all_modul;ct_mod=ct_mod+1)
           {
@@ -835,7 +835,7 @@ void DAC_slow_swich (uint16_t power)
   }
   else
   {
-     for (ct_mass=lamp_state.lamp_power;ct_mass>power;ct_mass=ct_mass-0xff)
+     for (ct_mass=lamp_state.lamp_power;ct_mass>power;ct_mass=ct_mass-100)
      {
        for (ct_mod=0;ct_mod<all_modul;ct_mod=ct_mod-1)
          {
@@ -864,7 +864,8 @@ void RSet_lamp_power (void)
 {
    if (Hi_DCDC.start_flag==1)
       {
-
+         GPIO_SetPinsOutput(BOARD_INITPINS_DRV_OFF_GPIO,1<<BOARD_INITPINS_DRV_OFF_PIN);
+         vTaskDelay(5*speed_grade);
          DAC_slow_swich(100);      
          vTaskDelay(speed_grade);
          set_data_drv(all_modul,mode_clear,0,lamp_state.led_onoff); 
@@ -875,6 +876,7 @@ void RSet_lamp_power (void)
          vTaskDelay(speed_grade);
          Hi_DCDC.stop_flag=0;
          Hi_DCDC.start_flag=0;
+         Hi_DCDC.stop_off=0;
        
       }
       vTaskDelay(speed_grade);
@@ -882,12 +884,14 @@ void RSet_lamp_power (void)
    
     if (Hi_DCDC.stop_flag==1)
       {
+         GPIO_SetPinsOutput(BOARD_INITPINS_DRV_OFF_GPIO,1<<BOARD_INITPINS_DRV_OFF_PIN);
          vTaskDelay(speed_grade);
          DAC_slow_swich(100);   
          GPIO_SetPinsOutput(BOARD_INITPINS_DRV_OFF_GPIO,1<<BOARD_INITPINS_DRV_OFF_PIN);
          vTaskDelay(speed_grade);
          Hi_DCDC.stop_flag=0;
          Hi_DCDC.start_flag=0;
+         Hi_DCDC.stop_off=1;
       }
     vTaskDelay(speed_grade);
     
@@ -909,9 +913,11 @@ void RSet_lamp_power (void)
       vTaskDelay(speed_grade);
    
     }
-      
+    if (Hi_DCDC.stop_off==0)
+      {  
       DAC_slow_swich(lamp_state.lamp_power_req);
       vTaskDelay(speed_grade);
+      }
      
     if (lamp_state.onoff_pix==1)
     {

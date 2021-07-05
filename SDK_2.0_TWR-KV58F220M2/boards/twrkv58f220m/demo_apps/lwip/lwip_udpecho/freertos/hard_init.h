@@ -174,7 +174,7 @@ typedef struct DCDC_data
     uint8_t power;
     uint8_t start_flag;
     uint8_t stop_flag;
-    
+    uint8_t stop_off;
     }DCDC_data_t;
 
 typedef struct Modul_data_t
@@ -190,12 +190,12 @@ typedef struct lamp_state_t
 {
  uint16_t lamp_power ;
  uint16_t lamp_power_req;
- Modul_data_t modul_state[all_modul]; 
- uint8_t led_onoff[all_modul*4*16];
- uint8_t led_data_r[all_modul*4*4];
- uint8_t led_data_g[all_modul*4*4];
- uint8_t led_data_b[all_modul*4*4];
- uint8_t led_data_ir[all_modul*4*4];
+ Modul_data_t modul_state[all_modul+1]; 
+ uint8_t led_onoff[all_modul*4*16+32];
+ uint8_t led_data_r[all_modul*4*4+32];
+ uint8_t led_data_g[all_modul*4*4+32];
+ uint8_t led_data_b[all_modul*4*4+32];
+ uint8_t led_data_ir[all_modul*4*4+32];
  uint8_t led_data_r_req;
  uint8_t led_data_g_req;
  uint8_t led_data_b_req;

@@ -379,9 +379,9 @@ void start_convert (void *pvParameters)
   //  vTaskResume(xHandle_reload_io);  
     vTaskDelay(configTICK_RATE_HZ*speed_grade/10);
     #if (lamp_sys)
-       lamp_state.lamp_power_req=5000;
+       lamp_state.lamp_power_req=15000;
     #else
-       lamp_state.lamp_power_req=30000;
+       lamp_state.lamp_power_req=10000;
     #endif
     set_color_power(lamp_state.led_data_r_req,lamp_state.led_data_g_req,lamp_state.led_data_b_req,0);
     lamp_state.reload_dot=1;
