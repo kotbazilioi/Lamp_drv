@@ -26,7 +26,7 @@
 #define power_lamp_0 0
 #define dy 250
 #define dp 50
-#define lamp_sys 1
+#define lamp_sys 0
 
 #define STATE_ON 1
 #define STATE_OFF 0

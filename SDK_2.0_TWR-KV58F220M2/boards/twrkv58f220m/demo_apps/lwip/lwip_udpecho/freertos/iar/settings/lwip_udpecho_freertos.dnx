@@ -18,7 +18,7 @@
         <jlinkResetStrategy>2</jlinkResetStrategy>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>3328736061</Checksum>
+        <Checksum>188760427</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -149,11 +149,19 @@
         <Bp8>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\devices\MKV58F24\system_MKV58F24.c}.95.3" 0 0 1 "" 0 "" 0</Bp8>
         <Count>9</Count>
     </Breakpoints2>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
+    <Aliases>
+        <Count>0</Count>
+        <SuppressDialog>0</SuppressDialog>
+    </Aliases>
     <DriverProfiling>
         <Enabled>0</Enabled>
         <Mode>3</Mode>
@@ -172,12 +180,4 @@
         <Probe0>I0</Probe0>
         <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
     </PowerProbe>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
-    <Aliases>
-        <Count>0</Count>
-        <SuppressDialog>0</SuppressDialog>
-    </Aliases>
 </settings>

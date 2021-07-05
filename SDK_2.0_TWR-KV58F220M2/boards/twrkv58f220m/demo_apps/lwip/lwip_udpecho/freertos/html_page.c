@@ -33,7 +33,7 @@ const char http_html_hdr[] = "HTTP/1.1 200 OK\r\nContent-type: text/html\r\n\r\n
 const uint8_t http_201_hdr[] = {0x48,0x54,0x54,0x50,0x2f,0x31,0x2e,0x31,0x20,0x32,0x30,0x30,0x20,0x4f,0x4b,0x0d,
 0x0a};
   //char * data[]="<a href=\"settings.html\" target=\"_self\" rel=\"nofollow\">????????? &emsp; </a>";/*<body onload=\"onload()\"\>*/
-static const char http_html_start_constr[] = "\<!DOCTYPE html>\r\n <body onload=\"onload()\">\n\r<a href=\"http:\/\/www.csort.ru/\"></a>\n\r<img src=\"/img/logo.gif\" height=\"63\" width=\"270\" border=\"0\" alt=\"csort logo\" title=\"Csort\">\n\r <html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n\r";
+//static const char http_html_start_constr[] = "\<!DOCTYPE html>\r\n <body onload=\"onload()\">\n\r<a href=\"http:\/\/www.csort.ru/\"></a>\n\r<img src=\"/img/logo.gif\" height=\"63\" width=\"270\" border=\"0\" alt=\"csort logo\" title=\"Csort\">\n\r <html>\r\n<head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n\r";
 //          "<script\>"
 //
 //	  "var xhr\;"
@@ -99,6 +99,57 @@ static const char http_html_start_constr1[] = "<!DOCTYPE html>"
 "	    xhr.send(null);"
 "	  }"
 "</script>";
+
+static const char http_html_start_constr_dy[] = 
+          "\<!DOCTYPE HTML>\n\r"
+          "<body onload=\"onload()\"\>\n\r"
+          "<html>\n\r"
+          "<head>\n\r"
+          "<title>Csort</title>\n\r"
+          "<a href=\"http:\/\/www.csort.ru/\"><img src=\"img/logo.gif\" height=\"63\" width=\"270\" border=\"0\" alt=\"csort logo\" title=\"200 OK\"></a>\n\r"
+          "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+          "\n\r\<script\>\n\r"
+	  "var xhr,xhr1\;\n\r "
+           "var idTimer1,idTimer2\;\n\r "
+	   "function onload(){\n\r"
+	   "xhr = new (XMLHttpRequest); \n\r" 
+           "xhr1 = new (XMLHttpRequest); \n\r"   
+	   "}\n\r"
+           
+             
+           "setInterval(function Timer1(){\n\r"
+           "xhr.open(\"GET\", \"content.html?r=\" + Math.random(), true); \n\r"
+	   "xhr.responseType = \"text\"; \n\r"
+	   "xhr.onload = function (oEvent){\n\r"
+	   " document.getElementById('information').innerHTML = xhr.response; \n\r"
+	   "}\n\r"
+           "xhr.send(null); \n\r"
+    	   "idTimer1 = setTimeout(\"Timer1()\", 3000); \n\r"
+	   "},3000); \n\r"
+             
+             
+           "setInterval(function Timer2(){\n\r"
+           "xhr1.open(\"GET\", \"content1.html?r=\" + Math.random(), true); \n\r"
+	   "xhr1.responseType = \"text\"; \n\r"
+	   "xhr1.onload = function (oEvent){\n\r"
+	   " document.getElementById('information1').innerHTML = xhr1.response; \n\r"
+	   "}\n\r"            
+	   "xhr1.send(null); \n\r"
+    	   "idTimer2 = setTimeout(\"Timer2()\", 900); \n\r"
+	   "},900); \n\r"
+"</script>"
+;
+
+static const char http_html_start_constr[] = "\<!DOCTYPE html> <body onload=\"onload()\"\>  <a href=\"http:\/\/www.netping.ru/\"><img src=\"img/netping.gif\" height=\"59\" width=\"169\" border=\"0\" alt=\"netping logo\" title=\"200 OK\"></a> <html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
+         "\<script\>"
+	  "var xhr\;"
+           "var idTimer1\";"
+	   "function onload(){"
+	   "xhr = new (XMLHttpRequest);"
+	   "}"
+
+"</script>"
+;
 
 static const char http_html_style[] = 
 "<title>Fon DRV</title>"
@@ -409,7 +460,7 @@ uint32_t costr_page1(char* str1)
   char str4[size_page_bufer_slave];
   memset (str1,0, size_page_bufer);
   //len = sizeof(http_html_start_constr);
-  strcat(str1,http_html_start_constr1);
+  strcat(str1,http_html_start_constr_dy);
   
   //len = len+sizeof(http_html_style);
   strcat(str1,http_html_style);
@@ -522,9 +573,12 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2);
   
   memset(str2,0,256);
-  sprintf(str2,"<b>Текущая температура: M1=%dC'  M2=%dC'  M3=%dC'  M4=%dC'  M5=%dC'  M6=%dC'  M7=%dC'                                                 </b>",lamp_state.modul_state[0].temp,lamp_state.modul_state[1].temp,lamp_state.modul_state[2].temp,lamp_state.modul_state[3].temp,lamp_state.modul_state[4].temp,lamp_state.modul_state[5].temp,lamp_state.modul_state[6].temp);
+  sprintf(str2,"<pre id=\"information\"></pre>\n\r");
   strcat(str1,str2);
-  
+  memset(str2,0,256);
+ sprintf(str2,"<pre id=\"information1\"></pre>\n\r");
+  strcat(str1,str2);
+   
    set_br(str2,2);
   strcat(str1,str2);
   

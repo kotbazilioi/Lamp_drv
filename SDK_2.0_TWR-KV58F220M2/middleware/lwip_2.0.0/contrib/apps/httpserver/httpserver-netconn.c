@@ -21,7 +21,51 @@
 int fr;
 
 uint8_t page_index;
-
+static const unsigned char PAGE_HEADER_200_OK[] = {
+  //"HTTP/1.1 200 OK"
+  0x48,0x54,0x54,0x50,0x2f,0x31,0x2e,0x30,0x20,0x32,0x30,0x30,0x20,0x4f,0x4b,0x0d,
+  0x0a,
+  //zero
+  0x00
+};
+static const unsigned char PAGE_HEADER_SERVER[] = {
+  //"Server: lwIP/1.3.1 (http://savannah.nongnu.org/projects/lwip)"
+  0x53,0x65,0x72,0x76,0x65,0x72,0x3a,0x20,0x6c,0x77,0x49,0x50,0x2f,0x31,0x2e,0x33,
+  0x2e,0x31,0x20,0x28,0x68,0x74,0x74,0x70,0x3a,0x2f,0x2f,0x73,0x61,0x76,0x61,0x6e,
+  0x6e,0x61,0x68,0x2e,0x6e,0x6f,0x6e,0x67,0x6e,0x75,0x2e,0x6f,0x72,0x67,0x2f,0x70,
+  0x72,0x6f,0x6a,0x65,0x63,0x74,0x73,0x2f,0x6c,0x77,0x69,0x70,0x29,0x0d,0x0a,
+  //zero
+  0x00
+};
+static const unsigned char PAGE_HEADER_CONTENT_TEXT[] = {
+  //"Content-type: text/html"
+  0x43,0x6f,0x6e,0x74,0x65,0x6e,0x74,0x2d,0x74,0x79,0x70,0x65,0x3a,0x20,0x74,0x65,
+  0x78,0x74,0x2f,0x68,0x74,0x6d,0x6c,0x0d,0x0a,0x0d,0x0a,
+  //zero
+  0x00
+};
+//*
+static const unsigned char PAGE_HEADER_CONTENT_STREAM[] = {
+  //"Content-Type: application/octet-stream"
+  0x43,0x6f,0x6e,0x74,0x65,0x6e,0x74,0x2d,0x54,0x79,0x70,0x65,0x3a,0x20,0x61,0x70,
+  0x70,0x6c,0x69,0x63,0x61,0x74,0x69,0x6f,0x6e,0x2f,0x6f,0x63,0x74,0x65,0x74,0x2d,
+  0x73,0x74,0x72,0x65,0x61,0x6d,0x0d,0x0a,
+  //zero
+  0x00
+};
+static const unsigned char PAGE_HEADER_LEN[] = {
+  //"Content-Length: "
+  0x43,0x6f,0x6e,0x74,0x65,0x6e,0x74,0x2d,0x4c,0x65,0x6e,0x67,0x74,0x68,0x3a,0x20,
+  //zero
+  0x00
+};
+static const unsigned char PAGE_HEADER_BYTES[] = {
+  //"Accept-Ranges: bytes"
+  0x41,0x63,0x63,0x65,0x70,0x74,0x2d,0x52,0x61,0x6e,0x67,0x65,0x73,0x3a,0x20,0x62,
+  0x79,0x74,0x65,0x73,0x0d,0x0a,0x0d,0x0a,
+  //zero
+  0x00
+};
 
 
 
@@ -424,9 +468,9 @@ static void http_server_netconn_serve(struct netconn *conn1)
    We assume the request (the part we care about) is in one netbuf */
  recv_err = netconn_recv(conn1, &inbuf);
   if (recv_err == ERR_OK)
-  {
+   {
     if (netconn_err(conn1) == ERR_OK) 
-    {
+     {
       netbuf_data(inbuf, (void**)&buf, &buflen);
          
       memset((void*)key_http,0,30);
@@ -441,58 +485,67 @@ static void http_server_netconn_serve(struct netconn *conn1)
         }
       memcpy((char*)buf_list,(char*)&buf[start_key],16);  
       unbase64((char*)buf_list,16,&key_http_len,key_http);
-
-  
-   
       if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) != 0))
-          {          
-            len_buf_list=costr_pass((char*)buf_list);
-            netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-            flag_logon=0;
-          }
-      
-       if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) == 0))
-            {
-              flag_logon=1;
-            }
-            
-      
-    if(strncmp(key_http,"admin:csort",key_http_len) == 0)  
-     {
+       {          
+        len_buf_list=costr_pass((char*)buf_list);
+        netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+        flag_logon=0;
+       }
+      if ((flag_logon==0)&&(strncmp(key_http,"admin:csort",key_http_len) == 0))
+       {
+        flag_logon=1;
+       }
+      if(strncmp(key_http,"admin:csort",key_http_len) == 0)  
+       {
       if ((buflen >=5) && (strncmp(buf, "GET /", 5) == 0))
-      {
-        /* Check if request to get ST.gif */ 
-         if (strncmp((char const *)buf,"GET /img/rgb24.bmp",17)==0)
-        {
-          costr_graf_pl_start(conn1,buf_list);
-          
-          vTaskDelay(100);
-//          len_buf_list=sizeof((uint8_t*)http_html_hdr);
-//          memcpy(buf_list,http_html_hdr,len_buf_list);
-//          netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-        }         
+       {
+        if (strncmp((char const *)buf,"GET /img/rgb24.bmp",17)==0)
+         {
+//////////          costr_graf_pl_start(conn1,buf_list);
+//////////          
+//////////          vTaskDelay(100);
+////////////          len_buf_list=sizeof((uint8_t*)http_html_hdr);
+////////////          memcpy(buf_list,http_html_hdr,len_buf_list);
+////////////          netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+         }         
         
-      else if (strncmp((char const *)buf,"GET /img/logo.gif",17)==0)
-        {
+        else if (strncmp((char const *)buf,"GET /img/logo.gif",17)==0)
+         {
           recv_err=fs_open(&file, "/img/logo.gif");           
           status=netconn_write(conn1, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
          // vTaskDelay(100);
           fs_close(&file);
           
-        }          
-      else if (strncmp((char const *)buf,"GET /settings.html",17)==0)
-            {
-              page_index=1;
-              len_buf_list=costr_settings((char*)buf_list);
-              status=netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
+         }          
+        else if (strncmp((char const *)buf,"GET /settings.html",17)==0)
+         {
+          page_index=1;
+          len_buf_list=costr_settings((char*)buf_list);
+          status=netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
              // vTaskDelay(100);
 //              len_buf_list=sizeof((uint8_t*)http_html_hdr);
 //              memcpy(buf_list,http_html_hdr,len_buf_list);
 //              netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
      
-            }
-//      else if (strncmp((char const *)buf,"GET /data_strim.html",17)==0)
-//            {
+         }
+        else if (strncmp((char const *)buf,"GET /content.html",17)==0)
+         {
+          sprintf(buf_list,"%s%s%s Текущая температура: M1=%dС M2=%dC M3=%dC M4=%dC M5=%dC M6=%dC M7=%dC ",PAGE_HEADER_200_OK,PAGE_HEADER_SERVER,PAGE_HEADER_CONTENT_TEXT,lamp_state.modul_state[0].temp,lamp_state.modul_state[1].temp,lamp_state.modul_state[2].temp,lamp_state.modul_state[3].temp,
+          lamp_state.modul_state[4].temp,lamp_state.modul_state[5].temp,lamp_state.modul_state[6].temp);
+          len_buf_list = strlen(buf_list);
+          netconn_write(conn1, (char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);      
+          vTaskDelay(100);   
+         }
+        else if (strncmp((char const *)buf,"GET /content1.html",18)==0)
+         {
+          sprintf(buf_list,"%s%s%s  Текущая мощность=%d Текущая состояние %d",PAGE_HEADER_200_OK,PAGE_HEADER_SERVER,PAGE_HEADER_CONTENT_TEXT,lamp_state.lamp_power,Hi_DCDC.stop_off);
+          len_buf_list = strlen(buf_list);
+          netconn_write(conn1, (char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);      
+          vTaskDelay(100);  
+         }
+         
+   //   else if (strncmp((char const *)buf,"GET /data_strim.html",17)==0)
+    //        {
 //              page_index=2;
 //              len_buf_list=costr_logs((char*)buf_list);
 //              status=netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
@@ -502,36 +555,18 @@ static void http_server_netconn_serve(struct netconn *conn1)
 ////              netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
 //              
 //             // fs_close(&file);
-//            }
-      else ///if((strncmp(buf, "GET /index.html", 15) == 0)||(strncmp(buf, "GET / HTTP/1.1", 14) == 0))
+    //        }
+       else if((strncmp(buf, "GET /index.html", 15) == 0)||(strncmp(buf, "GET / HTTP/1.1", 14) == 0))
         {
          page_index=0;
          
           len_buf_list=costr_page1((char*)buf_list);
           status=netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-       //   lamp_state.onoff_pix==1
-//          recv_err=fs_open(&file, "/index.html");           
-//          status=netconn_write(conn1, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
-          
-          
-//          len_buf_list=strlen(http_html_hdr);
-//          memcpy(buf_list,http_html_hdr,len_buf_list);
-//          netconn_write(conn1, (const unsigned char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);
-
         }
-//        else 
-//        {
-//          page_index=3;
-//          /* Load Error page */
-//          fs_open(&file, "/img/404.gif"); 
-//          netconn_write(conn1, (const unsigned char*)(file.data), (size_t)file.len, NETCONN_NOCOPY);
-//          fs_close(&file);
-//          vTaskDelay(100);
-//        }
-      }
-    else
-      {
-        if ((buflen >=5) && (strncmp(buf, "POST /", 5) == 0))
+       }
+       else 
+       {
+         if ((buflen >=5) && (strncmp(buf, "POST /", 5) == 0))
         {  
           
               parser_post(buf,buflen,page_index);

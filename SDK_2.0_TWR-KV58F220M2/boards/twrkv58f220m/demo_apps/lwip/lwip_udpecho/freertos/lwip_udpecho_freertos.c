@@ -381,7 +381,7 @@ void start_convert (void *pvParameters)
     #if (lamp_sys)
        lamp_state.lamp_power_req=15000;
     #else
-       lamp_state.lamp_power_req=10000;
+       lamp_state.lamp_power_req=20000;
     #endif
     set_color_power(lamp_state.led_data_r_req,lamp_state.led_data_g_req,lamp_state.led_data_b_req,0);
     lamp_state.reload_dot=1;
