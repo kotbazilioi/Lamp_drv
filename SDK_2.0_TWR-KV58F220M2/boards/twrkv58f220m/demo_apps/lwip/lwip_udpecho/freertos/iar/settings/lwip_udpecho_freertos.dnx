@@ -12,13 +12,13 @@
         <ByteLimit>50</ByteLimit>
     </Stack>
     <JLinkDriver>
-        <CStepIntDis>_ 0</CStepIntDis>
-        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
         <jlinkResetStyle>12</jlinkResetStyle>
         <jlinkResetStrategy>2</jlinkResetStrategy>
+        <CStepIntDis>_ 0</CStepIntDis>
+        <LeaveTargetRunning>_ 0</LeaveTargetRunning>
     </JLinkDriver>
     <DebugChecksum>
-        <Checksum>188760427</Checksum>
+        <Checksum>1953744181</Checksum>
     </DebugChecksum>
     <Disassembly>
         <MixedMode>1</MixedMode>
@@ -49,6 +49,28 @@
         <ITMportsLogFile>0</ITMportsLogFile>
         <ITMlogFile>$PROJ_DIR$\ITM.log</ITMlogFile>
     </SWOTraceHWSettings>
+    <DriverProfiling>
+        <Enabled>0</Enabled>
+        <Mode>3</Mode>
+        <Graph>0</Graph>
+        <Symbiont>0</Symbiont>
+        <Exclusions />
+    </DriverProfiling>
+    <CallStackLog>
+        <Enabled>0</Enabled>
+    </CallStackLog>
+    <CallStackStripe>
+        <ShowTiming>1</ShowTiming>
+    </CallStackStripe>
+    <PowerProbe>
+        <Frequency>10000</Frequency>
+        <Probe0>I0</Probe0>
+        <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
+    </PowerProbe>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <struct_types>
         <Fmt0>Modul_data_t-temp	3	0</Fmt0>
         <Fmt1>ip4_addr_t-addr	4	0</Fmt1>
@@ -56,7 +78,8 @@
         <Fmt3>lamp_state_t-lamp_power	3	0</Fmt3>
         <Fmt4>lamp_state_t-lamp_power_req	3	0</Fmt4>
         <Fmt5>sim_uid_t-L	4	0</Fmt5>
-        <Fmt6>sim_uid_t-ML	4	0</Fmt6>
+        <Fmt6>sim_uid_t-MH	4	0</Fmt6>
+        <Fmt7>sim_uid_t-ML	4	0</Fmt7>
     </struct_types>
     <array_types>
         <Fmt0>char (const)[32]	3	0</Fmt0>
@@ -134,11 +157,16 @@
         <ShowTimeSum>1</ShowTimeSum>
         <SumSortOrder>0</SumSortOrder>
     </EventLog>
+    <LogFile>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+        <Category>_ 0</Category>
+    </LogFile>
     <DisassembleMode>
         <mode>2</mode>
     </DisassembleMode>
     <Breakpoints2>
-        <Bp0>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\middleware\lwip_2.0.0\src\api\api_lib.c}.388.3" 0 0 1 "" 0 "" 0</Bp0>
+        <Bp0>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\middleware\lwip_2.0.0\src\api\api_lib.c}.443.9" 0 0 1 "" 0 "" 0</Bp0>
         <Bp1>_ 0 "EMUL_DATA" "fs_open" 0 0 0 0 4294967295</Bp1>
         <Bp2>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\rtos\freertos_8.2.3\Source\portable\MemMang\heap_3.c}.266.10" 0 0 1 "" 0 "" 0</Bp2>
         <Bp3>_ 0 "EMUL_DATA" "MAC_ADR" 0 0 0 0 4294967295</Bp3>
@@ -147,37 +175,11 @@
         <Bp6>_ 0 "EMUL_DATA" "SPI_masterTxData[ct_byte]" 0 0 0 0 4294967295</Bp6>
         <Bp7>_ 0 "EMUL_DATA_LOG" "start_convert" 0 0</Bp7>
         <Bp8>_ 0 "EMUL_CODE" "{D:\Projects\MainLDrv20\Lamp_drv\SDK_2.0_TWR-KV58F220M2\devices\MKV58F24\system_MKV58F24.c}.95.3" 0 0 1 "" 0 "" 0</Bp8>
-        <Count>9</Count>
+        <Bp9>_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\frame_decod.c}.553.15" 0 0 1 "" 0 "" 0</Bp9>
+        <Count>10</Count>
     </Breakpoints2>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
-    <LogFile>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </LogFile>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
-    <DriverProfiling>
-        <Enabled>0</Enabled>
-        <Mode>3</Mode>
-        <Graph>0</Graph>
-        <Symbiont>0</Symbiont>
-        <Exclusions />
-    </DriverProfiling>
-    <CallStackLog>
-        <Enabled>0</Enabled>
-    </CallStackLog>
-    <CallStackStripe>
-        <ShowTiming>1</ShowTiming>
-    </CallStackStripe>
-    <PowerProbe>
-        <Frequency>10000</Frequency>
-        <Probe0>I0</Probe0>
-        <ProbeSetup0>2 1 1 2 0 0</ProbeSetup0>
-    </PowerProbe>
 </settings>

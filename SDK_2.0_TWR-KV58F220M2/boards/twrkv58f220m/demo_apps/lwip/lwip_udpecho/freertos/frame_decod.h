@@ -42,6 +42,14 @@
 #define K_CORR_IR_A 0x10040450+0x800
 #define SPI0_SIZE all_modul
 
+
+
+#define type_fw lamp_sys+1
+#define release 0
+#define build 10
+
+
+
 #ifdef __cplusplus
 extern "C" {
   #endif

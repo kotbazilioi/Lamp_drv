@@ -1789,11 +1789,11 @@
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>lwip_udpecho_freertos.bin</state>
+                    <state>lamp_v10_15k.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>

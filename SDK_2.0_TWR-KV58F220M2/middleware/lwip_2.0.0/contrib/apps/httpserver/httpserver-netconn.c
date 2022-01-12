@@ -538,7 +538,7 @@ static void http_server_netconn_serve(struct netconn *conn1)
          }
         else if (strncmp((char const *)buf,"GET /content1.html",18)==0)
          {
-          sprintf(buf_list,"%s%s%s  Текущая мощность=%d Текущая состояние %d",PAGE_HEADER_200_OK,PAGE_HEADER_SERVER,PAGE_HEADER_CONTENT_TEXT,lamp_state.lamp_power,Hi_DCDC.stop_off);
+           sprintf(buf_list,"%s%s%s  Текущая мощность=%d: Текущая состояние ON/OFF %d : Текущий цвет %d",PAGE_HEADER_200_OK,PAGE_HEADER_SERVER,PAGE_HEADER_CONTENT_TEXT,lamp_state.lamp_power,Hi_DCDC.stop_off,lamp_state.color_index);
           len_buf_list = strlen(buf_list);
           netconn_write(conn1, (char*)(buf_list), (size_t)len_buf_list, NETCONN_NOCOPY);      
           vTaskDelay(100);  

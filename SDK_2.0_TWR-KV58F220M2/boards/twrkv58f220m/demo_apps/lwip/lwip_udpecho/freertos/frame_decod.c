@@ -23,6 +23,9 @@
 #include "pin_mux.h"
 #include "fsl_gpio.h"
 
+
+
+
 ////
 ////__root const char  FW1_CRC[32] @ FW1_CRC_A={0,0,0,0,0,0,0,0
 ////                                          ,0,0,0,0,0,0,0,0
@@ -32,7 +35,7 @@
 __root const char FW1_VER[32] @ FW1_VER_A ={1,0,0,0,0,0,0,0
                                           ,0,0,0,0,(0xff&(__BUILD_NUMBER__>>24)),(0xff&(__BUILD_NUMBER__>>16)),(0xff&(__BUILD_NUMBER__>>8)),(0xff&__BUILD_NUMBER__)
                                           ,0,0,0,0,0,0,0,__STDC_VERSION__ 
-                                          ,0,0,0,0,0,0,0,1};
+                                          ,0,0,0,0,type_fw,release,build,1};
 
 //////__root const char FW1_LEN[32] @ FW1_LEN_A={0xff,0x1f,0,0,0,0,0,0
 //////                                          ,0,0,0,0,0,0,0,0
@@ -547,11 +550,41 @@ else
             
             case 12309:
             {  //load_dot_correction
+              switch(lamp_state.color_index)
+              {
+              case 0:
+              {
+                memcpy(lamp_state.led_data_r,data,all_modul*16);
+                memcpy(lamp_state.led_data_g,data,all_modul*16);
+                memcpy(lamp_state.led_data_b,data,all_modul*16);
+                memcpy(lamp_state.led_data_ir,data,all_modul*16);
+              }break;
               
-                memcpy(lamp_state.led_data_r,data,all_modul*4);
-                memcpy(lamp_state.led_data_g,((uint8_t *)(data+all_modul*4)),all_modul*4);
-                memcpy(lamp_state.led_data_b,((uint8_t *)(data+all_modul*8)),all_modul*4);
-                memcpy(lamp_state.led_data_ir,((uint8_t *)(data+all_modul*12)),all_modul*4);
+              case 1:
+              {
+                memcpy(lamp_state.led_data_r,data,all_modul*16);
+                
+              }break;
+              
+              case 2:
+              {
+                memcpy(lamp_state.led_data_g,data,all_modul*16);
+               
+              }break;
+              
+              case 3:
+              {
+                memcpy(lamp_state.led_data_b,data,all_modul*16);
+             
+              }break;
+              
+              case 4:
+              {
+                memcpy(lamp_state.led_data_ir,data,all_modul*16);
+               
+              }break;
+              }
+              
                 lamp_state.reload_dot=1;
                 flag_frame_run=0;
                 flag_frame_run_udp=0;
@@ -586,8 +619,7 @@ else
             break;
             
             case 12312:
-            {   // Index_pixel_set
-               // lamp_state.pixel_edit_index = all_modul*16-(0x000000ff&data[0]);
+            {  
                lamp_state.pixel_edit_index = 0x000000ff&data[0];
                 flag_frame_run=0;
                 flag_frame_run_udp=0;
@@ -1053,6 +1085,16 @@ else
               flag_frame_run_can=0;
            }
             break; 
+             case 12321:
+           {
+              jamp_loader();
+              *out_len_data=1;
+              data_tx_out[0]=0;
+              flag_frame_run=0;
+              flag_frame_run_udp=0;
+              flag_frame_run_can=0;
+           }
+            break;
            
          case 0x00:
            { // GET ID
@@ -1284,16 +1326,16 @@ else
 ////             flag_frame_run_udp=0;
 ////             flag_frame_run_can=0;
 ////             
-////           }
-////            break;
-////          case 0x07:
-////           {
-////              jamp_app();
-////              *out_len_data=1;
-////              data_tx_out[0]=0;
-////              flag_frame_run=0;
-////              flag_frame_run_udp=0;
-////              flag_frame_run_can=0;
+           }
+           break;
+          case 0x07:
+           {
+              jamp_app();
+              *out_len_data=1;
+              data_tx_out[0]=0;
+              flag_frame_run=0;
+              flag_frame_run_udp=0;
+              flag_frame_run_can=0;
            }
             break;
           case 0x08:
@@ -1597,6 +1639,7 @@ else
 //////                *out_len_data=1;
            }
             break;
+            
 
          default:
            PRINTF("Error command =: 0x%x\r\n", id);

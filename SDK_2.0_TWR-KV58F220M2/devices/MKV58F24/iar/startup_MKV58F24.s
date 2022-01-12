@@ -64,7 +64,8 @@
         PUBLIC  __Vectors
         PUBLIC  __Vectors_End
         PUBLIC  __Vectors_Size
-
+        PUBLIC jamp_app
+        PUBLIC jamp_loader
         
         
         DATA
@@ -373,7 +374,90 @@ Reset_Handler
         LDR     R0, =__iar_program_start
         BX      R0
 
+        PUBWEAK jamp_app
+        SECTION .text:CODE:REORDER:NOROOT(2)
+jamp_app
+        CPSID   I //а鱻㡭饠ﳪ덊        ldr     r0,=0x00000000
+        MSR     CONTROL,R0 //
+        LDR     R1, =0xE000E010
+        STR     R0, [R1]
+        
+        LDR     R1, =0xE000E014
+        STR     R0, [R1]
+        
+        LDR     R1, =0xE000E018
+        STR     R0, [R1]
+        
+        MSR     APSR,R0
+        MSR     IPSR,R0
+        
+        ldr     r0,=0x01000000
+        MSR     EPSR,R0       
 
+        LDR     R0,=0x00000000
+        MSR     PSP,R0
+         LDR     R0,=0x2F00A020
+        MSR     MSP,R0       
+            
+        LDR     LR,=0xffffffff   
+        
+       
+        LDR     R0, =0xE000ED08
+        LDR     R1, =0x10040000
+        STR     R1, [R0]
+        
+        LDR     R0,=0x10040000
+        LDR     R13,[R0,#0x0]
+       // ldr     r13,=0x20000500 
+        LDR     R0,=0x10040000
+        LDR     R1,[R0,#0x4]
+     //   LDR     R0,=1
+    //    SUBS     R1,#1
+        BX      R1
+        
+        
+        
+        PUBWEAK jamp_loader
+        SECTION .text:CODE:REORDER:NOROOT(2)
+jamp_loader
+        CPSID   I 
+        MSR     CONTROL,R0 //
+        LDR     R1, =0xE000E010
+        STR     R0, [R1]
+        
+        LDR     R1, =0xE000E014
+        STR     R0, [R1]
+        
+        LDR     R1, =0xE000E018
+        STR     R0, [R1]
+        
+        MSR     APSR,R0
+        MSR     IPSR,R0
+        
+        ldr     r0,=0x01000000
+        MSR     EPSR,R0       
+
+        LDR     R0,=0x00000000
+        MSR     PSP,R0
+         LDR     R0,=0x2F00A020
+        MSR     MSP,R0       
+            
+        LDR     LR,=0xffffffff   
+        
+       
+        LDR     R0, =0xE000ED08
+        LDR     R1, =0x10000000
+        STR     R1, [R0]
+        
+        LDR     R0,=0x10000000
+        LDR     R13,[R0,#0x0]
+
+        LDR     R0,=0x10000000
+        LDR     R1,[R0,#0x4]
+
+        BX      R1
+        
+        
         
         PUBWEAK NMI_Handler
         SECTION .text:CODE:REORDER:NOROOT(1)

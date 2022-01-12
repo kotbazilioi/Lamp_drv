@@ -49,7 +49,7 @@
 #endif
 
 #include "ethernetif.h"
-
+#include "hard_init.h"
 #include "fsl_enet.h"
 #include "fsl_phy.h"
 #include "board.h"
@@ -208,18 +208,25 @@ low_level_init(struct netif *netif)
   netif->hwaddr_len = ETHARP_HWADDR_LEN;
 
   /* set MAC hardware address */
- ;
- long long   MAC_ADR;
- MAC_ADR =(long long)ID_STR.ML;
- MAC_ADR = MAC_ADR<<32;
- MAC_ADR |= ID_STR.L;
- char* pointer=(char*)&MAC_ADR;
-  netif->hwaddr[0] = *(pointer);
-  netif->hwaddr[1] = *(pointer+1);
-  netif->hwaddr[2] = *(pointer+2);
-  netif->hwaddr[3] = *(pointer+3);
-  netif->hwaddr[4] = *(pointer+4);
-  netif->hwaddr[5] = *(pointer+5);
+// ;
+// long long   MAC_ADR;
+// MAC_ADR =(long long)ID_STR.ML;
+// MAC_ADR = MAC_ADR<<32;
+// MAC_ADR |= ID_STR.L;
+// char* pointer=(char*)&MAC_ADR;
+//  netif->hwaddr[0] = 00;
+//  netif->hwaddr[1] = *(pointer+4);
+//  netif->hwaddr[2] = *(pointer+5);
+//  netif->hwaddr[3] = *(pointer+6);
+//  netif->hwaddr[4] = *(pointer+7);
+//  netif->hwaddr[5] = *(pointer+8);
+  
+  netif->hwaddr[0] = 00;
+  netif->hwaddr[1] = FW_data.V_ID_MAC[3];
+  netif->hwaddr[2] = FW_data.V_ID_MAC[4];
+  netif->hwaddr[3] = FW_data.V_ID_MAC[5];
+  netif->hwaddr[4] = FW_data.V_ID_MAC[6];
+  netif->hwaddr[5] = FW_data.V_ID_MAC[7];
 
   /* maximum transfer unit */
   netif->mtu = 1500; // TODO: define a config

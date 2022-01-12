@@ -6,7 +6,7 @@
 #include "lwip/opt.h"
 #include "lwip/arch.h"
 #include "lwip/api.h"
-
+#include "frame_decod.h"
 #define TO_HEX(i) (i <= 9 ? '0' + i : 'A' - 10 + i)
 //#include "flash_if.h"
 uint8_t ct_logoff_time;
@@ -124,8 +124,8 @@ static const char http_html_start_constr_dy[] =
 	   " document.getElementById('information').innerHTML = xhr.response; \n\r"
 	   "}\n\r"
            "xhr.send(null); \n\r"
-    	   "idTimer1 = setTimeout(\"Timer1()\", 3000); \n\r"
-	   "},3000); \n\r"
+    	   "idTimer1 = setTimeout(\"Timer1()\", 2000); \n\r"
+	   "},2000); \n\r"
              
              
            "setInterval(function Timer2(){\n\r"
@@ -477,8 +477,8 @@ uint32_t costr_page1(char* str1)
   set_open_block(str2,"h4");
   strcat(str1,str2);
   
-  sizeof("Драйвер лампы и фона HW2.0 ");
-  strcat(str1,"Драйвер лампы и фона HW2.0 ");
+  sprintf(str2,"Драйвер лампы и фона HW2.0 v.%02d.%02d.%03d",type_fw,release,build);
+  strcat(str1,str2);
   
   reset_open_block(str2,"h4");
   strcat(str1,str2);
@@ -566,7 +566,7 @@ uint32_t costr_page1(char* str1)
   strcat(str1,str2); 
   
   memset(str2,0,256);
-  sprintf(str2,"<b>%x.%x.%x.%x.%x.%x</b>",FW_data.V_ID_MAC[0],FW_data.V_ID_MAC[1],FW_data.V_ID_MAC[2],FW_data.V_ID_MAC[3],FW_data.V_ID_MAC[4],FW_data.V_ID_MAC[5]);
+  sprintf(str2,"<b>%02x.%02x.%02x.%02x.%02x.%02x</b>",0x00,FW_data.V_ID_MAC[3],FW_data.V_ID_MAC[4],FW_data.V_ID_MAC[5],FW_data.V_ID_MAC[6],FW_data.V_ID_MAC[7]);
   strcat(str1,str2);
   
    set_br(str2,2);

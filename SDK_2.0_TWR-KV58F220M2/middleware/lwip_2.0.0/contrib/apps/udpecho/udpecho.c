@@ -60,8 +60,8 @@ static void udpecho_thread(void *arg)
   netconn_bind(conn, IP_ADDR_ANY, 2048);
   
   
-  conn1 = netconn_new(NETCONN_UDP);
-  netconn_bind(conn1, IP_ADDR_ANY,161); 
+//  conn1 = netconn_new(NETCONN_UDP);
+//  netconn_bind(conn1, IP_ADDR_ANY,161); 
 #endif /* LWIP_IPV6 */
   LWIP_ERROR("udpecho: invalid conn", (conn != NULL), return;);
 
@@ -109,33 +109,33 @@ static void udpecho_thread(void *arg)
     
     
     
-   err = netconn_recv(conn1, &buf);
-    if (err == ERR_OK) {
-      /*  no need netconn_connect here, since the netbuf contains the address */
-      if(netbuf_copy(buf, buffer, sizeof(buffer)) != buf->p->tot_len)
-        {
-          LWIP_DEBUGF(LWIP_DBG_ON, ("netbuf_copy failed\n"));
-        }
-      else
-        {
-          decoding_frame(buffer,buf->p->tot_len,0,buf->p->payload,&out_len);
-          buf->p->tot_len=out_len;
-          buf->p->len =out_len;
-          netconn_send(conn, buf);
-//  buffer[buf->p->tot_len] = '\0';
-        //  err = netconn_send(conn, buf);
-          if(err != ERR_OK)
-            {
-              LWIP_DEBUGF(LWIP_DBG_ON, ("netconn_send failed: %d\n", (int)err));
-            }
-          else
-            {
-            //  LWIP_DEBUGF(LWIP_DBG_ON, ("got %s\n", buffer));
-
-            }
-        }
-      netbuf_delete(buf);
-    }
+//   err = netconn_recv(conn1, &buf);
+//    if (err == ERR_OK) {
+//      /*  no need netconn_connect here, since the netbuf contains the address */
+//      if(netbuf_copy(buf, buffer, sizeof(buffer)) != buf->p->tot_len)
+//        {
+//          LWIP_DEBUGF(LWIP_DBG_ON, ("netbuf_copy failed\n"));
+//        }
+//      else
+//        {
+//          decoding_frame(buffer,buf->p->tot_len,0,buf->p->payload,&out_len);
+//          buf->p->tot_len=out_len;
+//          buf->p->len =out_len;
+//          netconn_send(conn, buf);
+////  buffer[buf->p->tot_len] = '\0';
+//        //  err = netconn_send(conn, buf);
+//          if(err != ERR_OK)
+//            {
+//              LWIP_DEBUGF(LWIP_DBG_ON, ("netconn_send failed: %d\n", (int)err));
+//            }
+//          else
+//            {
+//            //  LWIP_DEBUGF(LWIP_DBG_ON, ("got %s\n", buffer));
+//
+//            }
+//        }
+//      netbuf_delete(buf);
+//    }
     
     
     

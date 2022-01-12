@@ -2333,12 +2333,13 @@ void     hard_config (void)
           Ser |= ID_STR.L;
           ID_STR.L = ID_STR.L|0x10;
       char* p = (char*)&Ser;
-        for (int i = 0; i <= 7; i++)
+        for (int i = 0; i <= 8; i++)
           {
             Serial[i] = *(p + i);
             FW_data.V_ID_MAC[i]=*(p + i);
+            
           }
-
+   //FW_data.V_ID_MAC[0]=0;
 
    //FTM var
     ftm_config_t ftmInfo;
